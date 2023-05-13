@@ -2,9 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include "listas.c"
+#include "menus.c"
 
 
 
 int main(){
     
+
+    int opcao = 0;
+
+    opcao = menu();
+
+    return 0;
 }
