@@ -47,7 +47,8 @@ do{
                             adicionar_produto(&iniciolista, &fimlista, &total, categorias, &num_categorias);
                             break;
                         case 2:
-                           //listar_produtos(categorias, num_categorias);
+                           ordenar_produtos(iniciolista);
+                           listar_produtos(iniciolista);
                             break;
                         case 3:
                             //remover_produto(categorias, num_categorias);

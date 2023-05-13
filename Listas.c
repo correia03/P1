@@ -113,9 +113,67 @@ void adicionar_produto(lista **iniciolista,lista **fimlista,int *total, categori
     return;
 }
 // função para listar produtos por ordem alfabética
+void ordenar_produtos(lista *iniciolista)
+{
+    if (iniciolista == NULL || iniciolista->proximo == NULL)
+    {
+        // Lista vazia ou com apenas um elemento, não há necessidade de ordenação
+        return;
+    }
 
+    int trocou;
+    lista *atual;
+    lista *ultimo = NULL;
 
+    do
+    {
+        trocou = 0;
+        atual = iniciolista;
 
+        while (atual->proximo != ultimo)
+        {
+            produto *p1 = atual->produto;
+            produto *p2 = atual->proximo->produto;
 
+            if (strcmp(p1->nome, p2->nome) > 0)
+            {
+                // Trocar os produtos
+                produto *temp = atual->produto;
+                atual->produto = atual->proximo->produto;
+                atual->proximo->produto = temp;
+                trocou = 1;
+            }
 
+            atual = atual->proximo;
+        }
 
+        ultimo = atual;
+
+    } while (trocou);
+}
+void listar_produtos(lista *iniciolista)
+{
+    lista *atual = iniciolista;
+
+    if (atual == NULL)
+    {
+        printf("A lista de produtos esta vazia.\n");
+        return;
+    }
+
+    printf("Lista de Produtos:\n");
+
+    while (atual != NULL)
+    {
+        produto *p = atual->produto;
+        printf("Produto Numero: %d\n", p->produto_numero);
+        printf("Categoria: %s\n", p->categoria->nome);
+        printf("Nome: %s\n", p->nome);
+        printf("Preco: %.2f\n", p->preco);
+        printf("SKU: %s\n", p->sku);
+        printf("Quantidade em Stock: %d\n", p->quantidade);
+        printf("\n");
+
+        atual = atual->proximo;
+    }
+}
