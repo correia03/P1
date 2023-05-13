@@ -4,15 +4,15 @@
 typedef struct categoria
 {
     char nome[100];
-    char identificador[1];
+    char identificador[100];
 } categoria;
 //MAXIMO 250 PRODUTOS
 typedef struct produto
 {
     categoria *categoria;  
     char nome[100];
+    float preco; 
     char sku[20];
-    float preco;
     int quantidade;
     int produto_numero;
 
