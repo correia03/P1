@@ -6,12 +6,12 @@ typedef struct categoria
     char nome[100];
     char identificador[100];
 } categoria;
-//MAXIMO 250 PRODUTOS
+// MAXIMO 250 PRODUTOS
 typedef struct produto
 {
-    categoria *categoria;  
+    categoria *categoria;
     char nome[100];
-    float preco; 
+    float preco;
     char sku[20];
     int quantidade;
     int produto_numero;
