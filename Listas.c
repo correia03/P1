@@ -64,7 +64,7 @@ void remover_categoria(categoria *categorias, int *num_categorias)
     }
 }
 // função para adicionar produtos e ler o input
-void adicionar_produto(lista **iniciolista, lista **fimlista, int *total, categoria *categorias, int *num_categorias)
+void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias, int *num_categorias)
 {
     lista *novo = NULL;
     novo = calloc(1, sizeof(lista));
@@ -126,11 +126,14 @@ void adicionar_produto(lista **iniciolista, lista **fimlista, int *total, catego
     // se a categoria não existir, adicionar
     if (existe == 0)
     {
-        adicionar_categoria(categorias, num_categorias);
+        printf("nao existe essa categoria");
+        free(novo);
+        free(novo_produto);
+        return;
     }
     // incrementar o total de produtos
-    (*total)++;
-    novo_produto->produto_numero = (*total);
+    (*num_produtos)++;
+    novo_produto->produto_numero = (*num_produtos);
     // adicionar o produto à lista
     novo->produto = novo_produto;
     novo->anterior = NULL;
@@ -156,12 +159,13 @@ void listar_produtos(lista *iniciolista)
     while (atual != NULL)
     {
         printf("Nome: %s\n", atual->produto->nome);
-        printf("Preço: %.2f\n", atual->produto->preco);
+        printf("Preco: %.2f\n", atual->produto->preco);
         printf("SKU: %s\n", atual->produto->sku);
         printf("Quantidade em stock: %d\n", atual->produto->quantidade);
         printf("Categoria: %s\n", atual->produto->categoria->nome);
         printf("Identificador da categoria: %s\n", atual->produto->categoria->identificador);
-        printf("Número do produto: %d\n", atual->produto->produto_numero);
+        printf("Numero do produto: %d\n", atual->produto->produto_numero);
+        printf("----------------------------------------------------------------------------\n");
         atual = atual->proximo;
     }
 }

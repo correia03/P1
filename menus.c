@@ -22,7 +22,6 @@ int menu() {
 }
 int menugerir() {
     int op = 0;
-
     do {
         printf("\t1- gerir Categoria\n");
         printf("\t2- gerir Produtos\n");
