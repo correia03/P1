@@ -281,3 +281,82 @@ void ler_categorias(categoria *categorias, int *num_categorias)
     
     fclose(ficheiro);
 }
+// guardar num ficheiro de texto os produtos
+void guardar_produtos(lista *iniciolista)
+{
+    FILE *ficheiro = fopen("produtos.txt", "w");
+    if (ficheiro == NULL)
+    {
+        printf("Erro ao abrir ficheiro!\n");
+        return;
+    }
+    
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        fprintf(ficheiro, "%s %.2f %s %d %s %s %d\n", atual->produto->nome, atual->produto->preco, atual->produto->sku, atual->produto->quantidade, atual->produto->categoria->nome, atual->produto->categoria->identificador, atual->produto->produto_numero);
+        atual = atual->proximo;
+    }
+    
+    fclose(ficheiro);
+}
+// ler os produtos do ficheiro de texto
+void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias, int *num_categorias)
+{
+    FILE *ficheiro = fopen("produtos.txt", "r");
+    if (ficheiro == NULL)
+    {
+        printf("Erro ao abrir ficheiro!\n");
+        return;
+    }
+    
+    while (1)
+    {
+        produto *novo_produto = malloc(sizeof(produto));
+        if (novo_produto == NULL)
+        {
+            printf("Erro ao alocar memória!\n");
+            return;
+        }
+        
+        novo_produto->categoria = malloc(sizeof(categoria));
+        if (novo_produto->categoria == NULL)
+        {
+            printf("Erro ao alocar memória!\n");
+            return;
+        }
+        
+        if (fscanf(ficheiro, "%s %f %s %d %s %s %d", novo_produto->nome, &(novo_produto->preco), novo_produto->sku, &(novo_produto->quantidade), novo_produto->categoria->nome, novo_produto->categoria->identificador, &(novo_produto->produto_numero)) != 7)
+        {
+            free(novo_produto->categoria);
+            free(novo_produto);
+            break;
+        }
+        
+        (*num_produtos)++;
+        lista *novo = malloc(sizeof(lista));
+        if (novo == NULL)
+        {
+            printf("Erro ao alocar memória!\n");
+            return;
+        }
+        
+        novo->produto = novo_produto;
+        novo->anterior = NULL;
+        novo->proximo = NULL;
+        
+        if (*iniciolista == NULL)
+        {
+            *iniciolista = novo;
+            *fimlista = novo;
+        }
+        else
+        {
+            novo->anterior = *fimlista;
+            (*fimlista)->proximo = novo;
+            *fimlista = novo;
+        }
+    }
+    
+    fclose(ficheiro);
+}
