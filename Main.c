@@ -11,6 +11,7 @@ int main()
     lista *fimlista = NULL;
     int num_produtos = 0;
     categoria categorias[10];
+    ler_categorias(categorias, &num_categorias);
     do
     {
         opcao = menu();
@@ -69,6 +70,10 @@ int main()
                     break;
                 }
             } while (op != 0);
+            break;
+        case 0:
+            printf("A sair...\n");
+            guardar_categorias(categorias, num_categorias);
             break;
         default:
             break;

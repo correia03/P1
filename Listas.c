@@ -247,3 +247,37 @@ void ordenar_produtos(lista *iniciolista)
         ultimo = atual;
     } while (trocou);
 }
+// guardar num ficheiro de texto as categorias
+void guardar_categorias(categoria *categorias, int num_categorias)
+{
+    FILE *ficheiro = fopen("categorias.txt", "w");
+    if (ficheiro == NULL)
+    {
+        printf("Erro ao abrir ficheiro!\n");
+        return;
+    }
+    
+    for (int i = 0; i < num_categorias; i++)
+    {
+        fprintf(ficheiro, "%s %s\n", categorias[i].nome, categorias[i].identificador);
+    }
+    
+    fclose(ficheiro);
+}
+// ler as categorias do ficheiro de texto
+void ler_categorias(categoria *categorias, int *num_categorias)
+{
+    FILE *ficheiro = fopen("categorias.txt", "r");
+    if (ficheiro == NULL)
+    {
+        printf("Erro ao abrir ficheiro!\n");
+        return;
+    }
+    
+    while (fscanf(ficheiro, "%s %s", categorias[*num_categorias].nome, categorias[*num_categorias].identificador) == 2)
+    {
+        (*num_categorias)++;
+    }
+    
+    fclose(ficheiro);
+}
