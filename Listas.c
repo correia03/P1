@@ -259,7 +259,7 @@ void guardar_categorias(categoria *categorias, int num_categorias)
     
     for (int i = 0; i < num_categorias; i++)
     {
-        fprintf(ficheiro, "%s %s\n", categorias[i].nome, categorias[i].identificador);
+        fprintf(ficheiro, "nome da categoria:%s identificador da categoria:%s\n", categorias[i].nome, categorias[i].identificador);
     }
     
     fclose(ficheiro);
@@ -274,7 +274,7 @@ void ler_categorias(categoria *categorias, int *num_categorias)
         return;
     }
     
-    while (fscanf(ficheiro, "%s %s", categorias[*num_categorias].nome, categorias[*num_categorias].identificador) == 2)
+    while (fscanf(ficheiro, "nome da categoria:%s identificador da categoria:%s\n", categorias[*num_categorias].nome, categorias[*num_categorias].identificador) == 2)
     {
         (*num_categorias)++;
     }

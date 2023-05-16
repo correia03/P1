@@ -12,7 +12,6 @@ int main()
     int num_produtos = 0;
     categoria categorias[10];
     ler_categorias(categorias, &num_categorias);
-    // ler produtos chamar função void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias, int *num_categorias)
     ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias, &num_categorias);
     do
     {
@@ -76,7 +75,6 @@ int main()
         case 0:
             printf("A sair...\n");
             guardar_categorias(categorias, num_categorias);
-            // guardar produtos chamar a funçao void guardar_produtos(lista *iniciolista)
             guardar_produtos(iniciolista);
             break;
         default:
