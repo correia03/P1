@@ -10,7 +10,7 @@ int main()
     lista *iniciolista = NULL;
     lista *fimlista = NULL;
     int num_produtos = 0;
-    categoria categorias[10];
+    categoria categorias[100];
     ler_categorias(categorias, &num_categorias);
     ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias, &num_categorias);
     do

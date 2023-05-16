@@ -360,3 +360,126 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
     
     fclose(ficheiro);
 }
+/*criar utilizador com a estrutura de utlizador defenida
+//utilizador
+typedef struct utilizador
+{
+    char nome[100];
+    char email[100];
+    char password[100];
+    bool admin;
+    int id;
+} utilizador;
+// LISTA DE UTILIZADORES
+typedef struct lista_utilizadores
+{
+    utilizador *utilizador;
+    struct lista_utilizadores *proximo;
+    struct lista_utilizadores *anterior;
+} lista_utilizadores;
+
+*/
+// função para criar/adicionar um utilizador
+void adicionar_utilizador(lista_utilizadores **iniciolista, lista_utilizadores **fimlista, int *num_utilizadores)
+{
+    utilizador *novo_utilizador = malloc(sizeof(utilizador));
+    if (novo_utilizador == NULL)
+    {
+        printf("Erro ao alocar memória!\n");
+        return;
+    }
+    
+    printf("Nome: ");
+    scanf(" %s", novo_utilizador->nome);
+    printf("Email: ");
+    scanf(" %s", novo_utilizador->email);
+    printf("Password: ");
+    scanf(" %s", novo_utilizador->password);
+    printf("Admin (0 - não, 1 - sim): ");
+    scanf("%d", &(novo_utilizador->admin));
+    novo_utilizador->id = *num_utilizadores;
+    
+    (*num_utilizadores)++;
+    lista_utilizadores *novo = malloc(sizeof(lista_utilizadores));
+    if (novo == NULL)
+    {
+        printf("Erro ao alocar memória!\n");
+        return;
+    }
+    
+    novo->utilizador = novo_utilizador;
+    novo->anterior = NULL;
+    novo->proximo = NULL;
+    
+    if (*iniciolista == NULL)
+    {
+        *iniciolista = novo;
+        *fimlista = novo;
+    }
+    else
+    {
+        novo->anterior = *fimlista;
+        (*fimlista)->proximo = novo;
+        *fimlista = novo;
+    }
+}
+
+// função para remover um utilizador
+void remover_utilizador(lista_utilizadores **iniciolista, lista_utilizadores **fimlista, int *num_utilizadores)
+{
+    int id;
+    printf("ID do utilizador a remover: ");
+    scanf("%d", &id);
+    
+    lista_utilizadores *atual = *iniciolista;
+    while (atual != NULL)
+    {
+        if (atual->utilizador->id == id)
+        {
+            if (atual == *iniciolista)
+            {
+                *iniciolista = atual->proximo;
+                if (*iniciolista != NULL)
+                {
+                    (*iniciolista)->anterior = NULL;
+                }
+            }
+            else if (atual == *fimlista)
+            {
+                *fimlista = atual->anterior;
+                (*fimlista)->proximo = NULL;
+            }
+            else
+            {
+                atual->anterior->proximo = atual->proximo;
+                atual->proximo->anterior = atual->anterior;
+            }
+            
+            free(atual->utilizador);
+            free(atual);
+            (*num_utilizadores)--;
+            return;
+        }
+        
+        atual = atual->proximo;
+    }
+    
+    printf("Utilizador não encontrado!\n");
+}
+// funçao para listar utilizador mas so o nome email e o id
+void listar_utilizadores(lista_utilizadores *iniciolista)
+{
+    lista_utilizadores *atual = iniciolista;
+    while (atual != NULL)
+    {
+        printf("ID: %d\n", atual->utilizador->id);
+        printf("Nome: %s\n", atual->utilizador->nome);
+        printf("Email: %s\n", atual->utilizador->email);
+        printf("\n");
+        
+        atual = atual->proximo;
+    }
+}
+
+
+
