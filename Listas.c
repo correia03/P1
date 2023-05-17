@@ -289,17 +289,14 @@ void guardar_produtos(lista *iniciolista)
 // ler os produtos do ficheiro de texto
 void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias, int *num_categorias)
 {
-    printf("1");
     FILE *ficheiro = fopen("produtos.txt", "r");
     if (ficheiro == NULL)
     {
         printf("Erro ao abrir ficheiro!\n");
         return;
     }
-    printf("2");
     while (1)
     {
-        printf("3");
         produto p;
         p.categoria = calloc(1,sizeof(categoria));
         if (p.categoria == NULL)
@@ -320,12 +317,10 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
                    p.nome, &(p.preco), p.sku, &(p.quantidade),
                    p.categoria->nome, p.categoria->identificador, &(p.produto_numero)) != 7)
         {
-            printf("5");
             free(p.categoria);
             free(novo);
             break;  // Exit the loop if fscanf fails to read all values
         }
-        printf("6");
         novo->produto = p;
 
         (*num_produtos)++;
@@ -348,3 +343,5 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
 
     fclose(ficheiro);
 }
+//gerar sku do produto
+
