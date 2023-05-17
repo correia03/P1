@@ -21,7 +21,7 @@ typedef struct lista
     struct lista *prox;
     struct lista *ante;
 } lista;*/
-// funçao para adicionar categorias e ler o input do utilizador
+// funçao para adicionar categorias 
 void adicionar_categoria(categoria *categorias, int *num_categorias)
 {
     char nome[100];
@@ -74,51 +74,39 @@ void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos,
         return;
     }
     
-    produto *novo_produto = malloc(sizeof(produto));
-    if (novo_produto == NULL)
-    {
-        printf("Erro ao alocar memória!\n");
-        free(novo);
-        return;
-    }
+    produto novo_produto ;
+
     
-    novo_produto->categoria = malloc(sizeof(categoria));
-    if (novo_produto->categoria == NULL)
+    novo_produto.categoria = malloc(sizeof(categoria));
+    if (novo_produto.categoria == NULL)
     {
         printf("Erro ao alocar memória!\n");
         free(novo);
-        free(novo_produto);
         return;
     }
-    // ler nome do produto
     printf("Insira o nome do produto: ");
-    scanf("%s", novo_produto->nome);
+    scanf("%s", novo_produto.nome);
     fflush(stdin);
-    // ler preço do produto
-    printf("Insira o preço do produto: ");
-    scanf("%f", &(novo_produto->preco));
+    printf("Insira o preco do produto: ");
+    scanf("%f", &(novo_produto.preco));
     fflush(stdin);
-    // ler SKU do produto
     printf("Insira o SKU do produto: ");
-    scanf("%s", novo_produto->sku);
+    scanf("%s", novo_produto.sku);
     fflush(stdin);
-    // ler quantidade em stock do produto
     printf("Insira a quantidade em stock: ");
-    scanf("%d", &(novo_produto->quantidade));
+    scanf("%d", &(novo_produto.quantidade));
     fflush(stdin);
-    // ler categoria do produto
     printf("Insira a categoria do produto: ");
-    scanf("%s", novo_produto->categoria->nome);
+    scanf("%s", novo_produto.categoria->nome);
     fflush(stdin);
-    // ler identificador da categoria do produto
     printf("Insira o identificador da categoria do produto: ");
-    scanf("%s", novo_produto->categoria->identificador);
+    scanf("%s", novo_produto.categoria->identificador);
     fflush(stdin);
     // verificar se a categoria existe
     int existe = 0;
     for (int i = 0; i < *num_categorias; i++)
     {
-        if (strcmp(categorias[i].nome, novo_produto->categoria->nome) == 0 && strcmp(categorias[i].identificador, novo_produto->categoria->identificador) == 0)
+        if (stricmp(categorias[i].nome, novo_produto.categoria->nome) == 0 && strcmp(categorias[i].identificador, novo_produto.categoria->identificador) == 0)
         {
             existe = 1;
         }
@@ -128,12 +116,11 @@ void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos,
     {
         printf("nao existe essa categoria");
         free(novo);
-        free(novo_produto);
         return;
     }
     // incrementar o total de produtos
     (*num_produtos)++;
-    novo_produto->produto_numero = (*num_produtos);
+    novo_produto.produto_numero = (*num_produtos);
     // adicionar o produto à lista
     novo->produto = novo_produto;
     novo->anterior = NULL;
@@ -158,13 +145,13 @@ void listar_produtos(lista *iniciolista)
     lista *atual = iniciolista;
     while (atual != NULL)
     {
-        printf("Nome: %s\n", atual->produto->nome);
-        printf("Preco: %.2f\n", atual->produto->preco);
-        printf("SKU: %s\n", atual->produto->sku);
-        printf("Quantidade em stock: %d\n", atual->produto->quantidade);
-        printf("Categoria: %s\n", atual->produto->categoria->nome);
-        printf("Identificador da categoria: %s\n", atual->produto->categoria->identificador);
-        printf("Numero do produto: %d\n", atual->produto->produto_numero);
+        printf("Nome: %s\n", atual->produto.nome);
+        printf("Preco: %.2f\n", atual->produto.preco);
+        printf("SKU: %s\n", atual->produto.sku);
+        printf("Quantidade em stock: %d\n", atual->produto.quantidade);
+        printf("Categoria: %s\n", atual->produto.categoria->nome);
+        printf("Identificador da categoria: %s\n", atual->produto.categoria->identificador);
+        printf("Numero do produto: %d\n", atual->produto.produto_numero);
         printf("----------------------------------------------------------------------------\n");
         atual = atual->proximo;
     }
@@ -180,7 +167,7 @@ void remover_produto(lista **iniciolista, lista **fimlista)
     lista *atual = *iniciolista;
     while (atual != NULL)
     {
-        if (atual->produto->produto_numero == numero)
+        if (atual->produto.produto_numero == numero)
         {
             // se o produto for o primeiro da lista
             if (atual == *iniciolista)
@@ -200,8 +187,7 @@ void remover_produto(lista **iniciolista, lista **fimlista)
                 atual->anterior->proximo = atual->proximo;
                 atual->proximo->anterior = atual->anterior;
             }
-            free(atual->produto->categoria);
-            free(atual->produto);
+            free(atual->produto.categoria);
             free(atual);
             return;
         }
@@ -229,13 +215,13 @@ void ordenar_produtos(lista *iniciolista)
         
         while (atual->proximo != ultimo)
         {
-            produto *p1 = atual->produto;
-            produto *p2 = atual->proximo->produto;
+            produto p1 = atual->produto;
+            produto p2 = atual->proximo->produto;
             
-            if (strcmp(p1->nome, p2->nome) > 0)
+            if (stricmp(p1.nome, p2.nome) > 0)
             {
                 // Trocar os produtos
-                produto *temp = atual->produto;
+                produto temp = atual->produto;
                 atual->produto = atual->proximo->produto;
                 atual->proximo->produto = temp;
                 trocou = 1;
@@ -294,7 +280,7 @@ void guardar_produtos(lista *iniciolista)
     lista *atual = iniciolista;
     while (atual != NULL)
     {
-        fprintf(ficheiro, "%s %.2f %s %d %s %s %d\n", atual->produto->nome, atual->produto->preco, atual->produto->sku, atual->produto->quantidade, atual->produto->categoria->nome, atual->produto->categoria->identificador, atual->produto->produto_numero);
+        fprintf(ficheiro, "marca/nome:%s preco do produto:%.2f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n", atual->produto.nome, atual->produto.preco, atual->produto.sku, atual->produto.quantidade, atual->produto.categoria->nome, atual->produto.categoria->identificador, atual->produto.produto_numero);
         atual = atual->proximo;
     }
     
@@ -312,27 +298,20 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
     
     while (1)
     {
-        produto *novo_produto = malloc(sizeof(produto));
-        if (novo_produto == NULL)
+        produto novo_produto;
+        
+        novo_produto.categoria = malloc(sizeof(categoria));
+        if (novo_produto.categoria == NULL)
         {
             printf("Erro ao alocar memória!\n");
             return;
         }
         
-        novo_produto->categoria = malloc(sizeof(categoria));
-        if (novo_produto->categoria == NULL)
+        if (fscanf(ficheiro, "marca/nome:%s preco do produto:%.2f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n", novo_produto.nome, &(novo_produto.preco), novo_produto.sku, &(novo_produto.quantidade), novo_produto.categoria->nome, novo_produto.categoria->identificador, &(novo_produto.produto_numero)) != 7)
         {
-            printf("Erro ao alocar memória!\n");
-            return;
-        }
-        
-        if (fscanf(ficheiro, "%s %f %s %d %s %s %d", novo_produto->nome, &(novo_produto->preco), novo_produto->sku, &(novo_produto->quantidade), novo_produto->categoria->nome, novo_produto->categoria->identificador, &(novo_produto->produto_numero)) != 7)
-        {
-            free(novo_produto->categoria);
-            free(novo_produto);
+            free(novo_produto.categoria);
             break;
         }
-        
         (*num_produtos)++;
         lista *novo = malloc(sizeof(lista));
         if (novo == NULL)
@@ -360,126 +339,3 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
     
     fclose(ficheiro);
 }
-/*criar utilizador com a estrutura de utlizador defenida
-//utilizador
-typedef struct utilizador
-{
-    char nome[100];
-    char email[100];
-    char password[100];
-    bool admin;
-    int id;
-} utilizador;
-// LISTA DE UTILIZADORES
-typedef struct lista_utilizadores
-{
-    utilizador *utilizador;
-    struct lista_utilizadores *proximo;
-    struct lista_utilizadores *anterior;
-} lista_utilizadores;
-
-*/
-// função para criar/adicionar um utilizador
-void adicionar_utilizador(lista_utilizadores **iniciolista, lista_utilizadores **fimlista, int *num_utilizadores)
-{
-    utilizador *novo_utilizador = malloc(sizeof(utilizador));
-    if (novo_utilizador == NULL)
-    {
-        printf("Erro ao alocar memória!\n");
-        return;
-    }
-    
-    printf("Nome: ");
-    scanf(" %s", novo_utilizador->nome);
-    printf("Email: ");
-    scanf(" %s", novo_utilizador->email);
-    printf("Password: ");
-    scanf(" %s", novo_utilizador->password);
-    printf("Admin (0 - não, 1 - sim): ");
-    scanf("%d", &(novo_utilizador->admin));
-    novo_utilizador->id = *num_utilizadores;
-    
-    (*num_utilizadores)++;
-    lista_utilizadores *novo = malloc(sizeof(lista_utilizadores));
-    if (novo == NULL)
-    {
-        printf("Erro ao alocar memória!\n");
-        return;
-    }
-    
-    novo->utilizador = novo_utilizador;
-    novo->anterior = NULL;
-    novo->proximo = NULL;
-    
-    if (*iniciolista == NULL)
-    {
-        *iniciolista = novo;
-        *fimlista = novo;
-    }
-    else
-    {
-        novo->anterior = *fimlista;
-        (*fimlista)->proximo = novo;
-        *fimlista = novo;
-    }
-}
-
-// função para remover um utilizador
-void remover_utilizador(lista_utilizadores **iniciolista, lista_utilizadores **fimlista, int *num_utilizadores)
-{
-    int id;
-    printf("ID do utilizador a remover: ");
-    scanf("%d", &id);
-    
-    lista_utilizadores *atual = *iniciolista;
-    while (atual != NULL)
-    {
-        if (atual->utilizador->id == id)
-        {
-            if (atual == *iniciolista)
-            {
-                *iniciolista = atual->proximo;
-                if (*iniciolista != NULL)
-                {
-                    (*iniciolista)->anterior = NULL;
-                }
-            }
-            else if (atual == *fimlista)
-            {
-                *fimlista = atual->anterior;
-                (*fimlista)->proximo = NULL;
-            }
-            else
-            {
-                atual->anterior->proximo = atual->proximo;
-                atual->proximo->anterior = atual->anterior;
-            }
-            
-            free(atual->utilizador);
-            free(atual);
-            (*num_utilizadores)--;
-            return;
-        }
-        
-        atual = atual->proximo;
-    }
-    
-    printf("Utilizador não encontrado!\n");
-}
-// funçao para listar utilizador mas so o nome email e o id
-void listar_utilizadores(lista_utilizadores *iniciolista)
-{
-    lista_utilizadores *atual = iniciolista;
-    while (atual != NULL)
-    {
-        printf("ID: %d\n", atual->utilizador->id);
-        printf("Nome: %s\n", atual->utilizador->nome);
-        printf("Email: %s\n", atual->utilizador->email);
-        printf("\n");
-        
-        atual = atual->proximo;
-    }
-}
-
-
-

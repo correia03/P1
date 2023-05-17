@@ -21,25 +21,33 @@ typedef struct produto
 
 typedef struct lista
 {
-    produto *produto;
+    produto produto;
     struct lista *proximo;
     struct lista *anterior;
 } lista;
 
-//utilizador
-typedef struct utilizador
+typedef struct {
+    int ano;
+    short mes;
+    short dia;
+} Data;
+typedef struct vendas
 {
     char nome[100];
+    int Nif;
+    char morada[100];
     char email[100];
-    char password[100];
-    bool admin;
+    char telefone[100];
+    Data data;
+    int quantidade_total;
+    float preco_total;
     int id;
-} utilizador;
-// LISTA DE UTILIZADORES
-typedef struct lista_utilizadores
+} vendas;
+// LISTA DE Vendas
+typedef struct lista_vendas
 {
-    utilizador *utilizador;
-    struct lista_utilizadores *proximo;
-    struct lista_utilizadores *anterior;
-} lista_utilizadores;
+    vendas vendas;
+    struct lista_vendas *proximo;
+    struct lista_vendas *anterior;
+} lista_vendas;
 
