@@ -12,7 +12,9 @@ int main()
     int num_produtos = 0;
     categoria categorias[100];
     ler_categorias(categorias, &num_categorias);
+    printf("antes");
     ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias, &num_categorias);
+    printf("depois");
     do
     {
         opcao = menu();

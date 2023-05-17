@@ -289,41 +289,50 @@ void guardar_produtos(lista *iniciolista)
 // ler os produtos do ficheiro de texto
 void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias, int *num_categorias)
 {
+    printf("1");
     FILE *ficheiro = fopen("produtos.txt", "r");
     if (ficheiro == NULL)
     {
         printf("Erro ao abrir ficheiro!\n");
         return;
     }
-    
+    printf("2");
     while (1)
     {
-        produto novo_produto;
-        
-        novo_produto.categoria = malloc(sizeof(categoria));
-        if (novo_produto.categoria == NULL)
+        printf("3");
+        produto p;
+        p.categoria = calloc(1,sizeof(categoria));
+        if (p.categoria == NULL)
         {
             printf("Erro ao alocar memória!\n");
+            fclose(ficheiro);
             return;
         }
-        
-        if (fscanf(ficheiro, "marca/nome:%s preco do produto:%.2f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n", novo_produto.nome, &(novo_produto.preco), novo_produto.sku, &(novo_produto.quantidade), novo_produto.categoria->nome, novo_produto.categoria->identificador, &(novo_produto.produto_numero)) != 7)
-        {
-            free(novo_produto.categoria);
-            break;
-        }
-        (*num_produtos)++;
-        lista *novo = malloc(sizeof(lista));
+        lista *novo = calloc(1, sizeof(lista));
         if (novo == NULL)
         {
             printf("Erro ao alocar memória!\n");
+            fclose(ficheiro);
             return;
         }
-        
-        novo->produto = novo_produto;
+        printf("4");
+        if (fscanf(ficheiro, "marca/nome:%s preco do produto:%f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n",
+                   p.nome, &(p.preco), p.sku, &(p.quantidade),
+                   p.categoria->nome, p.categoria->identificador, &(p.produto_numero)) != 7)
+        {
+            printf("5");
+            free(p.categoria);
+            free(novo);
+            break;  // Exit the loop if fscanf fails to read all values
+        }
+        printf("6");
+        novo->produto = p;
+
+        (*num_produtos)++;
         novo->anterior = NULL;
         novo->proximo = NULL;
-        
+
+        // Add the new product to the list
         if (*iniciolista == NULL)
         {
             *iniciolista = novo;
@@ -336,6 +345,6 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
             *fimlista = novo;
         }
     }
-    
+
     fclose(ficheiro);
 }
