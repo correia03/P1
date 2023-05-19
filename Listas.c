@@ -343,5 +343,135 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
 
     fclose(ficheiro);
 }
-//gerar sku do produto
+// VENDA
+/*
+typedef struct vendas
+{
+    char nome[100];
+    int Nif;
+    char morada[100];
+    char email[100];
+    char telefone[100];
+    Data data;
+    int quantidade_total;
+    float preco_total;
+    int id;
+} vendas;
+LISTA DE Vendas
+typedef struct lista_vendas
+{
+    vendas vendas;
+    struct lista_vendas *proximo;
+    struct lista_vendas *anterior;
+} lista_vendas;
+*/
+// função para adicionar vendas e ler o input
+void adicionar_venda(lista_vendas *iniciolista, lista_vendas *fimlista, int *num_vendas, FILE *ficheiro)
+{
+    //adicionar uma venda de um produto ja existente
+    // listar produtos
+    listar_produtos(iniciolista);
+    int numero;
+    printf("Insira o número do produto a vender: ");
+    scanf("%d", &numero);
+    // adicionar a lista das vendas as informaçoes do vendas
+    lista_vendas *novo = NULL;
+    novo = calloc(1, sizeof(lista_vendas));
+    if (novo == NULL)
+    {
+        printf("Erro ao alocar memória!\n");
+        return;
+    }
+    vendas novo_vendas;
+    printf("Insira o nome do cliente: ");
+    scanf("%s", novo_vendas.nome);
+    fflush(stdin);
+    printf("Insira o NIF do cliente: ");
+    scanf("%d", &(novo_vendas.Nif));
+    fflush(stdin);
+    printf("Insira a morada do cliente: ");
+    scanf("%s", novo_vendas.morada);
+    fflush(stdin);
+    printf("Insira o email do cliente: ");
+    scanf("%s", novo_vendas.email);
+    fflush(stdin);
+    printf("Insira o telefone do cliente: ");
+    scanf("%s", novo_vendas.telefone);
+    fflush(stdin);
+    printf("Insira a data da venda: ");
+    scanf("%d/%d/%d", &(novo_vendas.data.dia), &(novo_vendas.data.mes), &(novo_vendas.data.ano));
+    fflush(stdin);
+    printf("Insira a quantidade a vender: ");
+    scanf("%d", &(novo_vendas.quantidade_total));
+    fflush(stdin);
+    printf("Insira o preco total: ");
+    scanf("%f", &(novo_vendas.preco_total));
+    fflush(stdin);
+    printf("Insira o id da venda: ");
+    scanf("%d", &(novo_vendas.id));
+    fflush(stdin);
+    // adicionar a lista das vendas as informaçoes do vendas
+    novo->vendas = novo_vendas;
+    novo->anterior = NULL;
+    novo->proximo = NULL;
+    // adicionar o novo vendas na lista das vendas
+    if (iniciolista == NULL)
+    {
+        iniciolista = novo;
+        fimlista = novo;
+    }
+    else
+    {
+        novo->anterior = fimlista;
+        fimlista->proximo = novo;
+        fimlista = novo;
+    }
+    // decrementar a quantidade do produto
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        if (atual->produto.produto_numero == numero)
+        {
+            atual->produto.quantidade = atual->produto.quantidade - novo_vendas.quantidade_total;
+        }
+        atual = atual->proximo;
+    }
+    // guardar no ficheiro de texto
+    fprintf(ficheiro, "nome do cliente:%s NIF do cliente:%d morada do cliente:%s email do cliente:%s telefone do cliente:%s data da venda:%d/%d/%d quantidade total:%d preco total:%.2f id da venda:%d\n", novo_vendas.nome, novo_vendas.Nif, novo_vendas.morada, novo_vendas.email, novo_vendas.telefone, novo_vendas.data.dia, novo_vendas.data.mes, novo_vendas.data.ano, novo_vendas.quantidade_total, novo_vendas.preco_total, novo_vendas.id);
+}
+// função para listar vendas
+void listar_vendas(lista_vendas *iniciolista)
+{
+    lista_vendas *atual = iniciolista;
+    while (atual != NULL)
+    {
+        printf("Nome do cliente: %s\n", atual->vendas.nome);
+        printf("NIF do cliente: %d\n", atual->vendas.Nif);
+        printf("Morada do cliente: %s\n", atual->vendas.morada);
+        printf("Email do cliente: %s\n", atual->vendas.email);
+        printf("Telefone do cliente: %s\n", atual->vendas.telefone);
+        printf("Data da venda: %d/%d/%d\n", atual->vendas.data.dia, atual->vendas.data.mes, atual->vendas.data.ano);
+        printf("Quantidade total: %d\n", atual->vendas.quantidade_total);
+        printf("Preco total: %.2f\n", atual->vendas.preco_total);
+        printf("Id da venda: %d\n", atual->vendas.id);
+        printf("----------------------------------------------------------------------------\n");
+        atual = atual->proximo;
+    }
+}
+// função para anomnimizar os dados das pessoa
+void anomnimizar_dados(lista_vendas *iniciolista)
+{
+    lista_vendas *atual = iniciolista;
+    while (atual != NULL)
+    {
+        atual->vendas.Nif = 0;
+        atual->vendas.data.dia = 0;
+        atual->vendas.data.mes = 0;
+        atual->vendas.data.ano = 0;
+        atual->vendas.id = 0;
+        atual = atual->proximo;
+    }
+}
+
+
 
