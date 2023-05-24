@@ -25,6 +25,15 @@ typedef struct lista
     struct lista *proximo;
     struct lista *anterior;
 } lista;
+typedef struct clientes
+{
+    char nome[100];
+    int nif;
+    char endereco[100];
+    int telefone;
+    int cliente_numero;
+
+}clientes;
 
 typedef struct {
     int ano;
@@ -33,11 +42,7 @@ typedef struct {
 } Data;
 typedef struct vendas
 {
-    char nome[100];
-    int Nif;
-    char morada[100];
-    char email[100];
-    char telefone[100];
+    clientes *cliente;
     Data data;
     int quantidade_total;
     float preco_total;
