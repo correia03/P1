@@ -9,6 +9,8 @@ int main()
     int opcao, op, op2, num_categorias = 0;
     lista *iniciolista = NULL;
     lista *fimlista = NULL;
+    lista_vendas *iniciolista_vendas = NULL;
+    lista_vendas *fimlista_vendas = NULL;
     int num_produtos, num_vendas, num_clientes = 0;
     categoria categorias[100];
     clientes clientes[1000];

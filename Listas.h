@@ -39,6 +39,8 @@ typedef struct {
     int ano;
     short mes;
     short dia;
+    short hora;
+    short minuto;
 } Data;
 typedef struct vendas
 {

@@ -1,26 +1,4 @@
 #include "listas.h"
-
-/*inserir categoria com esta struct typedef struct categoria
-{
-    char nome[100];
-    char identificador[1];
-} categoria;
-typedef struct produto
-{
-    categoria *categoria;
-    char nome[100];
-    char identificador[1];
-    float preco;
-    int quantidade;
-
-} produto;
-
-typedef struct lista
-{
-    produto *produto;
-    struct lista *prox;
-    struct lista *ante;
-} lista;*/
 // funçao para adicionar categorias 
 void adicionar_categoria(categoria *categorias, int *num_categorias)
 {
@@ -344,16 +322,6 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
 
     fclose(ficheiro);
 }
-//CLIENTES
-/*typedef struct clientes
-{
-    char nome[100];
-    int nif;
-    char endereco[100];
-    int telefone;
-    int cliente_numero;
-
-}clientes; */
 // adicionar cliente
 void adicionar_cliente(clientes *cliente, int *num_clientes)
 {
@@ -503,6 +471,13 @@ void ler_clientes(clientes *cliente, int *num_clientes)
 }
 // VENDA
 /*
+typedef struct {
+    int ano;
+    short mes;
+    short dia;
+    short hora;
+    short minuto;
+} Data;
 typedef struct vendas
 {
     clientes *cliente;
@@ -519,6 +494,67 @@ typedef struct lista_vendas
     struct lista_vendas *anterior;
 } lista_vendas;
 */
-
-
-
+// adicionar venda e remover o stock ao produto que esta na lista dos produtos
+void adicionar_venda(lista_vendas **inicio_vendas,lista_vendas **fim_vendas,int *num_vendas, lista *iniciolista,int *num_produtos, clientes *clientes,int *num_clientes){
+// criar uma venda com o cliente selecionar os produtos a comprar e data automatica
+    int numero_cliente;
+    printf("Numero do cliente: ");
+    scanf("%d", &numero_cliente);
+    int numero_produto;
+    int quantidade;
+    int quantidade_total = 0;
+    float preco_total = 0;
+    Data data;
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    data.ano = tm.tm_year + 1900;
+    data.mes = tm.tm_mon + 1;
+    data.dia = tm.tm_mday;
+    data.hora = tm.tm_hour;
+    data.minuto = tm.tm_min;
+    do{
+    printf("Numero do produto: ");
+    scanf("%d", &numero_produto);
+    printf("Quantidade: ");
+    scanf("%d", &quantidade);
+    for (int i = 0; i < *num_produtos; i++)
+    {
+        if (iniciolista[i].produto_numero == numero_produto)
+        {
+            //verificar a quantidade
+            if (iniciolista[i].quantidade < quantidade)
+            {
+                printf("Quantidade insuficiente!\n");
+                break;
+            }
+                iniciolista[i].quantidade -= quantidade;
+                quantidade_total += quantidade;
+                preco_total += iniciolista[i].preco * quantidade;
+            break;
+        }
+    }
+    printf("pretende adicionar mais produtos? (s/n)\n");
+    char adicionar;
+    scanf("%c", &adicionar);
+    }while(adicionar == 's');
+    lista_vendas *novo = (lista_vendas *)malloc(sizeof(lista_vendas));
+    novo->vendas.cliente = &clientes[numero_cliente];
+    novo->vendas.data = data;
+    novo->vendas.quantidade_total = quantidade_total;
+    novo->vendas.preco_total = preco_total;
+    novo->vendas.id = *num_vendas;
+    novo->proximo = NULL;
+    novo->anterior = NULL;
+    if (*inicio_vendas == NULL)
+    {
+        *inicio_vendas = novo;
+        *fim_vendas = novo;
+    }
+    else
+    {
+        novo->anterior = *fim_vendas;
+        (*fim_vendas)->proximo = novo;
+        *fim_vendas = novo;
+    }
+    (*num_vendas)++;
+}
