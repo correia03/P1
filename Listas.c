@@ -17,9 +17,10 @@ void listar_categorias(categoria *categorias, int num_categorias)
 {
     for (int i = 0; i < num_categorias; i++)
     {
+        printf("\t-----------------------------------------------------------\n");
         printf("Nome: %s\n", categorias[i].nome);
         printf("Identificador: %s\n", categorias[i].identificador);
-        printf("-----------------------------------------------------------");
+        printf("\t-----------------------------------------------------------\n");
     }
 }
 // funçao para remover categorias
@@ -158,6 +159,7 @@ void listar_produtos(lista *iniciolista)
     lista *atual = iniciolista;
     while (atual != NULL)
     {
+        printf("\t-----------------------------------------------------------\n");
         printf("Nome: %s\n", atual->produto.nome);
         printf("Preco: %.2f\n", atual->produto.preco);
         printf("SKU: %s\n", atual->produto.sku);
@@ -165,7 +167,7 @@ void listar_produtos(lista *iniciolista)
         printf("Categoria: %s\n", atual->produto.categoria->nome);
         printf("Identificador da categoria: %s\n", atual->produto.categoria->identificador);
         printf("Numero do produto: %d\n", atual->produto.produto_numero);
-        printf("----------------------------------------------------------------------------\n");
+        printf("\t-----------------------------------------------------------\n");
         atual = atual->proximo;
     }
 }
@@ -282,6 +284,47 @@ void ordenar_produtos(lista *iniciolista)
         ultimo = atual;
     } while (trocou);
 }
+//listar produtos pelas categorias existentes percorrer as categorias verificar se a mesma existe depois verificar se tem produtos associados e se sim listar o produto
+void listar_produtos_categoria(lista *iniciolista, categoria *categorias, int num_categorias)
+{
+    char identificador[50];
+    printf("Insira o identificador da categoria: ");
+    scanf("%s", identificador);
+    int existe = 0;
+    for (int i = 0; i < num_categorias; i++)
+    {
+        if (strcmp(identificador, categorias[i].identificador) == 0)
+        {
+            existe = 1;
+            break;
+        }
+    }
+    if (existe == 0)
+    {
+        printf("nao existe essa categoria");
+        return;
+    }
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        if (strcmp(identificador, atual->produto.categoria->identificador) == 0)
+        {
+            printf("\t-----------------------------------------------------------\n");
+            printf("Nome: %s\n", atual->produto.nome);
+            printf("Preco: %.2f\n", atual->produto.preco);
+            printf("SKU: %s\n", atual->produto.sku);
+            printf("Quantidade em stock: %d\n", atual->produto.quantidade);
+            printf("Categoria: %s\n", atual->produto.categoria->nome);
+            printf("Identificador da categoria: %s\n", atual->produto.categoria->identificador);
+            printf("Numero do produto: %d\n", atual->produto.produto_numero);
+            printf("\t-----------------------------------------------------------\n");
+        }
+        atual = atual->proximo;
+    }
+}
+
+
+
 // guardar num ficheiro de texto as categorias
 void guardar_categorias(categoria *categorias, int num_categorias)
 {
@@ -437,12 +480,13 @@ void listar_clientes(clientes *cliente, int num_clientes)
 {
     for (int i = 0; i < num_clientes; i++)
     {
+        printf("\t-----------------------------------------------------------\n");
         printf("Nome do cliente: %s\n", cliente[i].nome);
         printf("NIF do cliente: %d\n", cliente[i].nif);
         printf("Endereco do cliente: %s\n", cliente[i].endereco);
         printf("Telefone do cliente: %d\n", cliente[i].telefone);
         printf("Numero do cliente: %d\n", cliente[i].cliente_numero);
-        printf("------------------------------------------------------------");
+        printf("\t-----------------------------------------------------------\n");
     }
 }
 //ordenar clientes por ordem alfabetica de nome
@@ -471,12 +515,13 @@ void procurar_cliente(clientes *cliente, int num_clientes)
     {
         if (cliente[i].nif == nif_cliente)
         {
+            printf("\t-----------------------------------------------------------\n");
             printf("Nome do cliente: %s\n", cliente[i].nome);
             printf("NIF do cliente: %d\n", cliente[i].nif);
             printf("Endereco do cliente: %s\n", cliente[i].endereco);
             printf("Telefone do cliente: %d\n", cliente[i].telefone);
             printf("Numero do cliente: %d\n", cliente[i].cliente_numero);
-            printf("------------------------------------------------------------");
+            printf("\t-----------------------------------------------------------\n");
             break;
         }
     }
@@ -500,7 +545,7 @@ void remover_cliente(clientes *cliente, int *num_clientes)
         }
     }
 }
-// alterar cliente
+// alterar cliente (rever ainda nao completo)
 void alterar_cliente(clientes *cliente, int num_clientes)
 {
     int numero_cliente;
