@@ -445,6 +445,42 @@ void listar_clientes(clientes *cliente, int num_clientes)
         printf("------------------------------------------------------------");
     }
 }
+//ordenar clientes por ordem alfabetica de nome
+void ordenar_clientes(clientes *cliente, int num_clientes)
+{
+    for (int i = 0; i < num_clientes; i++)
+    {
+        for (int j = i + 1; j < num_clientes; j++)
+        {
+            if (stricmp(cliente[i].nome, cliente[j].nome) > 0)
+            {
+                clientes temp = cliente[i];
+                cliente[i] = cliente[j];
+                cliente[j] = temp;
+            }
+        }
+    }
+}
+//procurar e listar um cliente pelo nif
+void procurar_cliente(clientes *cliente, int num_clientes)
+{
+    int nif_cliente;
+    printf("NIF do cliente a procurar: ");
+    scanf("%d", &nif_cliente);
+    for (int i = 0; i < num_clientes; i++)
+    {
+        if (cliente[i].nif == nif_cliente)
+        {
+            printf("Nome do cliente: %s\n", cliente[i].nome);
+            printf("NIF do cliente: %d\n", cliente[i].nif);
+            printf("Endereco do cliente: %s\n", cliente[i].endereco);
+            printf("Telefone do cliente: %d\n", cliente[i].telefone);
+            printf("Numero do cliente: %d\n", cliente[i].cliente_numero);
+            printf("------------------------------------------------------------");
+            break;
+        }
+    }
+}
 // remover cliente
 void remover_cliente(clientes *cliente, int *num_clientes)
 {

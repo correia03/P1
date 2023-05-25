@@ -149,3 +149,21 @@ int menulistarpor(){
 
     return op;
 }
+int menulistarclientes(){
+    int op = 0;
+
+    do {
+        printf("\t1- Listar todos por ordem alfabetica\n");
+        printf("\t2- Listar um determinado cliente pelo NIF\n");
+        printf("\t0- Voltar\n");
+
+        printf("Escolha uma Opcao: ");
+        scanf("%d", &op);
+
+        if (op < 0 || op > 2) {
+            printf("Opcao invalida. Tente novamente.\n");
+        }
+    } while (op < 0 || op > 2);
+
+    return op;
+}

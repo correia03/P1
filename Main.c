@@ -108,7 +108,21 @@ int main()
                             adicionar_cliente(clientes,&num_clientes);
                             break;
                         case 2:
-                            listar_clientes(clientes,num_clientes);
+                            do{
+                            op3 = menulistarclientes();
+                                switch (op3)
+                                {
+                                 case 1:
+                                     ordenar_clientes(clientes, num_clientes);
+                                     listar_clientes(clientes, num_clientes);
+                                    break;
+                                 case 2:
+                                    procurar_cliente(clientes,num_clientes);
+                                    break;
+                                 default:
+                                    break;
+                                }
+                            }while(op3 != 0);
                             break;
                         case 3:
                             remover_cliente(clientes,&num_clientes);
