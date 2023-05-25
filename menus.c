@@ -22,22 +22,23 @@ int menu() {
 
     return m;
 }
-int menugerirCategoriaseVendas() {
+int menugerirCategoriaseProdutos() {
     int op = 0;
     do {
         printf("\t-----------------------------------------------------------\n");
         printf("\t1- gerir Categoria\n");
         printf("\t2- gerir Produtos\n");
+        printf("\t3- listar categorias e produtos associados\n");
         printf("\t0- Voltar\n");
         printf("\t-----------------------------------------------------------\n");
 
         printf("Escolha uma Opcao: ");
         scanf("%d", &op);
 
-        if (op < 0 || op > 2) {
+        if (op < 0 || op > 3) {
             printf("Opcao invalida. Tente novamente.\n");
         }
-    } while (op < 0 || op > 2);
+    } while (op < 0 || op > 3);
 
     return op;
 }

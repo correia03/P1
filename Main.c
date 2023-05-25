@@ -25,7 +25,7 @@ int main()
         case 1:
             do
             {
-                op = menugerirCategoriaseVendas();
+                op = menugerirCategoriaseProdutos();
                 switch (op)
                 {
                 case 1:
@@ -87,6 +87,11 @@ int main()
                        
                     } while (op2 != 0); 
                     break;
+                case 3:
+                 //listar categorias e produtos 
+                    listar_produtos_categoria(iniciolista,categorias,num_categorias);
+                    break;
+                 break;
                 default:
                     break;
                 }

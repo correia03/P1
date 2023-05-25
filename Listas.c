@@ -287,39 +287,24 @@ void ordenar_produtos(lista *iniciolista)
 //listar produtos pelas categorias existentes percorrer as categorias verificar se a mesma existe depois verificar se tem produtos associados e se sim listar o produto
 void listar_produtos_categoria(lista *iniciolista, categoria *categorias, int num_categorias)
 {
-    char identificador[50];
-    printf("Insira o identificador da categoria: ");
-    scanf("%s", identificador);
-    int existe = 0;
     for (int i = 0; i < num_categorias; i++)
     {
-        if (strcmp(identificador, categorias[i].identificador) == 0)
+        printf("Categoria: %s",categorias[i].nome);
+        lista *atual = iniciolista;
+        while (atual != NULL)
         {
-            existe = 1;
-            break;
+          if (stricmp( categorias[i].identificador, atual->produto.categoria->identificador) == 0)
+           {
+               printf("\t-----------------------------------------------------------\n");
+               printf("Nome: %s\n", atual->produto.nome);
+               printf("Preco: %.2f\n", atual->produto.preco);
+               printf("SKU: %s\n", atual->produto.sku);
+               printf("Quantidade em stock: %d\n", atual->produto.quantidade);
+               printf("Numero do produto: %d\n", atual->produto.produto_numero);
+               printf("\t-----------------------------------------------------------\n");
+            }
+          atual = atual->proximo;
         }
-    }
-    if (existe == 0)
-    {
-        printf("nao existe essa categoria");
-        return;
-    }
-    lista *atual = iniciolista;
-    while (atual != NULL)
-    {
-        if (strcmp(identificador, atual->produto.categoria->identificador) == 0)
-        {
-            printf("\t-----------------------------------------------------------\n");
-            printf("Nome: %s\n", atual->produto.nome);
-            printf("Preco: %.2f\n", atual->produto.preco);
-            printf("SKU: %s\n", atual->produto.sku);
-            printf("Quantidade em stock: %d\n", atual->produto.quantidade);
-            printf("Categoria: %s\n", atual->produto.categoria->nome);
-            printf("Identificador da categoria: %s\n", atual->produto.categoria->identificador);
-            printf("Numero do produto: %d\n", atual->produto.produto_numero);
-            printf("\t-----------------------------------------------------------\n");
-        }
-        atual = atual->proximo;
     }
 }
 
