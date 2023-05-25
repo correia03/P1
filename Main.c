@@ -6,7 +6,7 @@
 
 int main()
 {
-    int opcao, op, op2, num_categorias = 0;
+    int opcao, op, op2, op3, num_categorias = 0;
     lista *iniciolista = NULL;
     lista *fimlista = NULL;
     lista_vendas *iniciolista_vendas = NULL;
@@ -60,8 +60,20 @@ int main()
                             adicionar_produto(&iniciolista, &fimlista, &num_produtos, categorias, &num_categorias);
                             break;
                         case 2:
-                            ordenar_produtos(iniciolista);
-                            listar_produtos(iniciolista);
+                            op3 = menulistarpor();
+                            switch (op3)
+                            {
+                            case 1:
+                                ordenar_produtos(iniciolista);
+                                listar_produtos(iniciolista);
+                                break;
+                            case 2:
+                                ordenar_preco_desc(iniciolista);
+                                listar_produtos(iniciolista);
+                            break;
+                            default:
+                                break;
+                            }
                             break;
                         case 3:
                             remover_produto(&iniciolista,&fimlista);
@@ -69,8 +81,9 @@ int main()
                         default:
                             break;
                         }
-                        break;
-                    } while (op2 != 0);
+                       
+                    } while (op2 != 0); 
+                    break;
                 default:
                     break;
                 }
@@ -98,7 +111,7 @@ int main()
                             remover_cliente(clientes,&num_clientes);
                             break;
                         case 4:
-                        //alterar_cliente
+                        //alterar_cliente verificar
                             alterar_cliente(clientes,num_clientes);
                             break;
                         default:

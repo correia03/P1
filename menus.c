@@ -3,7 +3,6 @@
 
 int menu() {
     int m = -1;
-
     while (m < 0) {
         printf("\t1- Gerir Categorias e Produtos: \n");
         printf("\t2- Gerir clientes e vendas: \n");
@@ -40,7 +39,6 @@ int menugerirCategoriaseVendas() {
 }
 int menugerircategorias() {
     int op = 0;
-
     do {
         printf("\t1- Adicionar Categoria\n");
         printf("\t2- listar categorias\n");
@@ -59,11 +57,10 @@ int menugerircategorias() {
 }
 int menugerirprodutos() {
     int op = 0;
-
     do {
         printf("\t1- Adicionar produto\n");
-        printf("\t2- listar produto\n");
-        printf("\t3- produto\n");
+        printf("\t2- listar produtos\n");
+        printf("\t3- remover produto\n");
         printf("\t0- Voltar\n");
 
         printf("Escolha uma Opcao: ");
@@ -78,7 +75,6 @@ int menugerirprodutos() {
 }
 int menugerirVendaseClientes(){
     int op = 0;
-
     do {
         printf("\t1- Gerir Clientes\n");
         printf("\t2- Gerir Venda\n");
@@ -130,6 +126,25 @@ int menugerirVendas(){
             printf("Opcao invalida. Tente novamente.\n");
         }
     } while (op < 0 || op > 3);
+
+    return op;
+}
+
+int menulistarpor(){
+    int op = 0;
+
+    do {
+        printf("\t1- Listar por nome\n");
+        printf("\t2- Listar por preco\n");
+        printf("\t0- Voltar\n");
+
+        printf("Escolha uma Opcao: ");
+        scanf("%d", &op);
+
+        if (op < 0 || op > 2) {
+            printf("Opcao invalida. Tente novamente.\n");
+        }
+    } while (op < 0 || op > 2);
 
     return op;
 }

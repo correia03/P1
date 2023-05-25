@@ -1,0 +1,2 @@
+nome da categoria:monitor identificador da categoria:m
+nome da categoria:computadores identificador da categoria:c

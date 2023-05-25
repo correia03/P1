@@ -173,7 +173,43 @@ void remover_produto(lista **iniciolista, lista **fimlista)
         atual = atual->proximo;
     }
 }
-
+// ordem descendente de preço.
+void ordenar_preco_desc(lista *iniciolista)
+{
+    if (iniciolista == NULL || iniciolista->proximo == NULL)
+    {
+        // Lista vazia ou com apenas um elemento, não há necessidade de ordenação
+        return;
+    }
+    
+    int trocou;
+    lista *atual;
+    lista *ultimo = NULL;
+    
+    do
+    {
+        trocou = 0;
+        atual = iniciolista;
+        
+        while (atual->proximo != ultimo)
+        {
+            produto p1 = atual->produto;
+            produto p2 = atual->proximo->produto;
+            
+            if (p1.preco < p2.preco)
+            {
+                // Trocar os produtos
+                produto temp = atual->produto;
+                atual->produto = atual->proximo->produto;
+                atual->proximo->produto = temp;
+                trocou = 1;
+            }
+            atual = atual->proximo;
+        }
+        ultimo = atual;
+    }
+    while (trocou);
+}
 // função para listar produtos por ordem alfabética
 void ordenar_produtos(lista *iniciolista)
 {
@@ -495,48 +531,57 @@ typedef struct lista_vendas
 } lista_vendas;
 */
 // adicionar venda e remover o stock ao produto que esta na lista dos produtos
-void adicionar_venda(lista_vendas **inicio_vendas,lista_vendas **fim_vendas,int *num_vendas, lista *iniciolista,int *num_produtos, clientes *clientes,int *num_clientes){
-// criar uma venda com o cliente selecionar os produtos a comprar e data automatica
+void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, lista **iniciolista, int *num_produtos, clientes *clientes, int *num_clientes) {
     int numero_cliente;
     printf("Numero do cliente: ");
     scanf("%d", &numero_cliente);
+    
     int numero_produto;
     int quantidade;
     int quantidade_total = 0;
     float preco_total = 0;
     Data data;
+    
     time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    data.ano = tm.tm_year + 1900;
-    data.mes = tm.tm_mon + 1;
-    data.dia = tm.tm_mday;
-    data.hora = tm.tm_hour;
-    data.minuto = tm.tm_min;
-    do{
-    printf("Numero do produto: ");
-    scanf("%d", &numero_produto);
-    printf("Quantidade: ");
-    scanf("%d", &quantidade);
-    for (int i = 0; i < *num_produtos; i++)
-    {
-        if (iniciolista[i].produto_numero == numero_produto)
-        {
-            //verificar a quantidade
-            if (iniciolista[i].quantidade < quantidade)
-            {
-                printf("Quantidade insuficiente!\n");
-                break;
-            }
-                iniciolista[i].quantidade -= quantidade;
-                quantidade_total += quantidade;
-                preco_total += iniciolista[i].preco * quantidade;
-            break;
-        }
-    }
-    printf("pretende adicionar mais produtos? (s/n)\n");
+    struct tm *tm = localtime(&t);
+    data.ano = tm->tm_year + 1900;
+    data.mes = tm->tm_mon + 1;
+    data.dia = tm->tm_mday;
+    data.hora = tm->tm_hour;
+    data.minuto = tm->tm_min;
+    
     char adicionar;
-    scanf("%c", &adicionar);
-    }while(adicionar == 's');
+    do {
+        printf("Numero do produto: ");
+        scanf("%d", &numero_produto);
+        
+        printf("Quantidade: ");
+        scanf("%d", &quantidade);
+        
+        // Percorrer a lista de produtos para verificar se o número é igual e se a quantidade escolhida é suficiente 
+        lista *aux = *iniciolista;
+        while (aux != NULL) {
+            if (aux->produto.produto_numero == numero_produto) {
+                if (aux->produto.quantidade >= quantidade) {
+                    aux->produto.quantidade -= quantidade;
+                    quantidade_total += quantidade;
+                    preco_total += aux->produto.preco * quantidade;
+                    break;
+                } else {
+                    printf("Quantidade insuficiente!\n");
+                    break;
+                }
+            }
+            aux = aux->proximo;
+        }
+        if (aux == NULL) {
+            printf("Produto nao encontrado!\n");
+        }
+        
+        printf("Deseja adicionar outra venda? (s/n) ");
+        scanf(" %c", &adicionar);
+    } while (adicionar == 's');
+    
     lista_vendas *novo = (lista_vendas *)malloc(sizeof(lista_vendas));
     novo->vendas.cliente = &clientes[numero_cliente];
     novo->vendas.data = data;
@@ -545,16 +590,15 @@ void adicionar_venda(lista_vendas **inicio_vendas,lista_vendas **fim_vendas,int 
     novo->vendas.id = *num_vendas;
     novo->proximo = NULL;
     novo->anterior = NULL;
-    if (*inicio_vendas == NULL)
-    {
+    
+    if (*inicio_vendas == NULL) {
         *inicio_vendas = novo;
         *fim_vendas = novo;
-    }
-    else
-    {
+    } else {
         novo->anterior = *fim_vendas;
         (*fim_vendas)->proximo = novo;
         *fim_vendas = novo;
     }
+    
     (*num_vendas)++;
 }
