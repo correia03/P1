@@ -32,7 +32,7 @@ void remover_categoria(categoria *categorias, int *num_categorias)
     scanf("%s", nome);
     for (int i = 0; i < *num_categorias; i++)
     {
-        if (strcmp(categorias[i].nome, nome) == 0)
+        if (stricmp(categorias[i].nome, nome) == 0)
         {
             for (int j = i; j < *num_categorias; j++)
             {
@@ -42,6 +42,40 @@ void remover_categoria(categoria *categorias, int *num_categorias)
         }
     }
 }
+// atualizar uma categoria e verificar que nenhum produto tem essa categoria
+void atualizar_categoria(categoria *categorias, int *num_categorias, lista *iniciolista)
+{
+    // listar categorias
+    listar_categorias(categorias, *num_categorias);
+    char nome[100];
+    printf("Insira o nome da categoria a atualizar: ");
+    scanf("%s", nome);
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        if (stricmp(atual->produto.categoria->nome, nome) == 0)
+        {
+            printf("Nao pode atualizar uma categoria que tem produtos associados!\n");
+            return;
+        }
+        atual = atual->proximo;
+    }
+    for (int i = 0; i < *num_categorias; i++)
+    {
+        if (stricmp(categorias[i].nome, nome) == 0)
+        {
+            char novo_nome[100];
+            char novo_identificador[100];
+            printf("Insira o novo nome da categoria: ");
+            scanf("%s", novo_nome);
+            printf("Insira o novo identificador da categoria: ");
+            scanf("%s", novo_identificador);
+            strcpy(categorias[i].nome, novo_nome);
+            strcpy(categorias[i].identificador, novo_identificador);
+        }
+    }
+}
+
 // função para adicionar produtos e ler o input
 void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias, int *num_categorias)
 {
@@ -85,7 +119,7 @@ void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos,
     int existe = 0;
     for (int i = 0; i < *num_categorias; i++)
     {
-        if (stricmp(categorias[i].nome, novo_produto.categoria->nome) == 0 && strcmp(categorias[i].identificador, novo_produto.categoria->identificador) == 0)
+        if (stricmp(categorias[i].nome, novo_produto.categoria->nome) == 0 && stricmp(categorias[i].identificador, novo_produto.categoria->identificador) == 0)
         {
             existe = 1;
         }

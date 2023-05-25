@@ -44,6 +44,9 @@ int main()
                         case 3:
                             remover_categoria(categorias, &num_categorias);
                             break;
+                        case 4:
+                            atualizar_categoria(categorias, &num_categorias, iniciolista);
+                            break;
                         default:
                             break;
                         }
