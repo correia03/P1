@@ -100,7 +100,9 @@ int main()
                  //listar categorias e produtos 
                     listar_produtos_categoria(iniciolista,categorias,num_categorias);
                     break;
-                 break;
+                case 4:
+                    //gerar relatorio dos produtos
+                    gerar_relatorio_produtos_categoria(iniciolista,categorias,num_categorias);
                 default:
                     break;
                 }
@@ -171,6 +173,7 @@ int main()
                         }
                         break;
                     } while (op2 != 0);*/ 
+                    break;
                 default:
                     break;
                 }

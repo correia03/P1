@@ -1,0 +1,20 @@
+Categoria: monitor
+Produtos associados:
+	-----------------------------------------------------------
+Nome: asus
+Preco: 199.00
+SKU: asusrog
+Quantidade em stock: 10
+Numero do produto: 1
+	-----------------------------------------------------------
+Categoria: computadores
+Produtos associados:
+	-----------------------------------------------------------
+Nome: msi
+Preco: 2000.00
+SKU: msititan
+Quantidade em stock: 20
+Numero do produto: 0
+	-----------------------------------------------------------
+Categoria: smartphones
+Produtos associados:

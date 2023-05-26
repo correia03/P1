@@ -29,16 +29,17 @@ int menugerirCategoriaseProdutos() {
         printf("\t1- gerir Categoria\n");
         printf("\t2- gerir Produtos\n");
         printf("\t3- listar categorias e produtos associados\n");
+        printf("\t4- gerar relatorio de produtos");
         printf("\t0- Voltar\n");
         printf("\t-----------------------------------------------------------\n");
 
         printf("Escolha uma Opcao: ");
         scanf("%d", &op);
 
-        if (op < 0 || op > 3) {
+        if (op < 0 || op > 4) {
             printf("Opcao invalida. Tente novamente.\n");
         }
-    } while (op < 0 || op > 3);
+    } while (op < 0 || op > 4);
 
     return op;
 }

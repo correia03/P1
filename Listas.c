@@ -400,7 +400,38 @@ void listar_produtos_categoria(lista *iniciolista, categoria *categorias, int nu
     }
 }
 
-
+//gerar relatorio produtos
+void gerar_relatorio_produtos_categoria(lista *iniciolista, categoria *categorias, int num_categorias)
+{
+    FILE *ficheiro = fopen("relatorio.txt", "w");
+    if (ficheiro == NULL)
+    {
+        printf("Erro ao abrir ficheiro!\n");
+        return;
+    }
+    
+    for (int i = 0; i < num_categorias; i++)
+    {
+        fprintf(ficheiro, "Categoria: %s\n",categorias[i].nome);
+        fprintf(ficheiro, "Produtos associados:\n");
+        lista *atual = iniciolista;
+        while (atual != NULL)
+        {
+          if (stricmp( categorias[i].identificador, atual->produto.categoria->identificador) == 0)
+           {
+               fprintf(ficheiro, "\t-----------------------------------------------------------\n");
+               fprintf(ficheiro, "Nome: %s\n", atual->produto.nome);
+               fprintf(ficheiro, "Preco: %.2f\n", atual->produto.preco);
+               fprintf(ficheiro, "SKU: %s\n", atual->produto.sku);
+               fprintf(ficheiro, "Quantidade em stock: %d\n", atual->produto.quantidade);
+               fprintf(ficheiro, "Numero do produto: %d\n", atual->produto.produto_numero);
+               fprintf(ficheiro, "\t-----------------------------------------------------------\n");
+            }
+          atual = atual->proximo;
+        }
+    }
+    fclose(ficheiro);
+}
 
 // guardar num ficheiro de texto as categorias
 void guardar_categorias(categoria *categorias, int num_categorias)
