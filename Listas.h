@@ -45,7 +45,7 @@ typedef struct {
 } Data;
 typedef struct vendas
 {
-    clientes *cliente;
+    clientes cliente;
     Data data;
     int quantidade_total;
     float preco_total;

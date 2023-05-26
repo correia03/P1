@@ -81,6 +81,15 @@ int main()
                         case 3:
                             remover_produto(&iniciolista,&fimlista);
                             break;
+                        case 4:
+                            atualizar_produto(iniciolista, categorias, &num_categorias);
+                            break;
+                        case 5:
+                            retirar_stock(iniciolista);
+                            break;
+                        case 6:
+                            adicionar_stock(iniciolista);
+                            break;
                         default:
                             break;
                         }

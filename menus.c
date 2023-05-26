@@ -70,16 +70,19 @@ int menugerirprodutos() {
         printf("\t1- Adicionar produto\n");
         printf("\t2- listar produtos\n");
         printf("\t3- remover produto\n");
+        printf("\t4- Atualizar produto\n");
+        printf("\t5- retirar stock de um produto\n");
+        printf("\t6- adicionar stock de um produto\n");
         printf("\t0- Voltar\n");
         printf("\t-----------------------------------------------------------\n");
 
         printf("Escolha uma Opcao: ");
         scanf("%d", &op);
 
-        if (op < 0 || op > 3) {
+        if (op < 0 || op > 6) {
             printf("Opcao invalida. Tente novamente.\n");
         }
-    } while (op < 0 || op > 3);
+    } while (op < 0 || op > 6);
 
     return op;
 }

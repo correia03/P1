@@ -1,2 +1,2 @@
-marca/nome:msi preco do produto:1999.00 sku:msititan quantidade em stock:5 categoria:computadores identificador da categoria:c id do produto:0
-marca/nome:asus preco do produto:199.00 sku:asusrog quantidade em stock:3 categoria:monitor identificador da categoria:m id do produto:1
+marca/nome:asus preco do produto:199.00 sku:asusrog quantidade em stock:10 categoria:monitor identificador da categoria:m id do produto:1
+marca/nome:msi preco do produto:2000.00 sku:msititan quantidade em stock:20 categoria:computadores identificador da categoria:c id do produto:0

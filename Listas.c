@@ -209,6 +209,98 @@ void remover_produto(lista **iniciolista, lista **fimlista)
         atual = atual->proximo;
     }
 }
+//funçao para retirar o stock de um produto
+void retirar_stock(lista *iniciolista)
+{
+    // listar produtos
+    listar_produtos(iniciolista);
+    int numero;
+    printf("Insira o número do produto a retirar stock: ");
+    scanf("%d", &numero);
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        if (atual->produto.produto_numero == numero)
+        {
+            atual->produto.quantidade = 0;
+            return;
+        }
+        atual = atual->proximo;
+    }
+}
+//funçao para adicionar o stock de um produto
+void adicionar_stock(lista *iniciolista)
+{
+    // listar produtos
+    listar_produtos(iniciolista);
+    int numero;
+    printf("Insira o número do produto a adicionar stock: ");
+    scanf("%d", &numero);
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        if (atual->produto.produto_numero == numero)
+        {
+            int quantidade;
+            printf("Insira a quantidade a adicionar: ");
+            scanf("%d", &quantidade);
+            atual->produto.quantidade += quantidade;
+            return;
+        }
+        atual = atual->proximo;
+    }
+}
+//funçao para atualizar o produto
+void atualizar_produto(lista *iniciolista, categoria *categorias, int *num_categorias)
+{
+    // listar produtos
+    listar_produtos(iniciolista);
+    int numero;
+    printf("Insira o número do produto a atualizar: ");
+    scanf("%d", &numero);
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        if (atual->produto.produto_numero == numero)
+        {
+            printf("Insira o nome do produto: ");
+            scanf("%s", atual->produto.nome);
+            fflush(stdin);
+            printf("Insira o preço do produto: ");
+            scanf("%f", &(atual->produto.preco));
+            fflush(stdin);
+            printf("Insira o SKU do produto: ");
+            scanf("%s", atual->produto.sku);
+            fflush(stdin);
+            printf("Insira a quantidade em stock: ");
+            scanf("%d", &(atual->produto.quantidade));
+            fflush(stdin);
+            printf("Insira a categoria do produto: ");
+            scanf("%s", atual->produto.categoria->nome);
+            fflush(stdin);
+            printf("Insira o identificador da categoria do produto: ");
+            scanf("%s", atual->produto.categoria->identificador);
+            fflush(stdin);
+            // verificar se a categoria existe
+            int existe = 0;
+            for (int i = 0; i < *num_categorias; i++)
+            {
+                if (stricmp(categorias[i].nome, atual->produto.categoria->nome) == 0 && stricmp(categorias[i].identificador, atual->produto.categoria->identificador) == 0)
+                {
+                    existe = 1;
+                }
+            }
+            // se a categoria não existir, adicionar
+            if (existe == 0)
+            {
+                printf("nao existe essa categoria");
+                return;
+            }
+            return;
+        }
+        atual = atual->proximo;
+    }
+}
 // ordem descendente de preço.
 void ordenar_preco_desc(lista *iniciolista)
 {
@@ -616,7 +708,7 @@ typedef struct {
 } Data;
 typedef struct vendas
 {
-    clientes *cliente;
+    clientes cliente;
     Data data;
     int quantidade_total;
     float preco_total;
@@ -683,7 +775,7 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     } while (adicionar == 's');
     
     lista_vendas *novo = (lista_vendas *)malloc(sizeof(lista_vendas));
-    novo->vendas.cliente = &clientes[numero_cliente];
+    novo->vendas.cliente = clientes[numero_cliente];
     novo->vendas.data = data;
     novo->vendas.quantidade_total = quantidade_total;
     novo->vendas.preco_total = preco_total;
