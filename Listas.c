@@ -774,7 +774,7 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     char adicionar;
     do {
         //listar produtos
-        listar_produtos(*iniciolista, *num_produtos);
+        listar_produtos(*iniciolista);
         printf("Numero do produto: ");
         scanf("%d", &numero_produto);
         
