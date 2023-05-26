@@ -761,8 +761,6 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     
     int numero_produto;
     int quantidade;
-    int quantidade_total = 0;
-    float preco_total = 0;
     Data data;
     
     time_t t = time(NULL);
@@ -775,6 +773,8 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     
     char adicionar;
     do {
+        //listar produtos
+        listar_produtos(*iniciolista, *num_produtos);
         printf("Numero do produto: ");
         scanf("%d", &numero_produto);
         
@@ -786,9 +786,30 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
         while (aux != NULL) {
             if (aux->produto.produto_numero == numero_produto) {
                 if (aux->produto.quantidade >= quantidade) {
+                    int quantidade_total = 0;
+                    float preco_total = 0;
                     aux->produto.quantidade -= quantidade;
                     quantidade_total += quantidade;
                     preco_total += aux->produto.preco * quantidade;
+                    lista_vendas *novo = (lista_vendas *)malloc(sizeof(lista_vendas));
+                     novo->vendas.cliente = clientes[numero_cliente];
+                     novo->vendas.data = data;
+                     novo->vendas.quantidade_total = quantidade_total;
+                     novo->vendas.preco_total = preco_total;
+                     novo->vendas.id = *num_vendas;
+                     novo->proximo = NULL;
+                     novo->anterior = NULL;
+    
+                      if (*inicio_vendas == NULL) {
+                            *inicio_vendas = novo;
+                            *fim_vendas = novo;
+                      } else {
+                         novo->anterior = *fim_vendas;
+                        (*fim_vendas)->proximo = novo;
+                         *fim_vendas = novo;
+                     }
+    
+                 (*num_vendas)++;
                     break;
                 } else {
                     printf("Quantidade insuficiente!\n");
@@ -804,24 +825,4 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
         printf("Deseja adicionar outra venda? (s/n) ");
         scanf(" %c", &adicionar);
     } while (adicionar == 's');
-    
-    lista_vendas *novo = (lista_vendas *)malloc(sizeof(lista_vendas));
-    novo->vendas.cliente = clientes[numero_cliente];
-    novo->vendas.data = data;
-    novo->vendas.quantidade_total = quantidade_total;
-    novo->vendas.preco_total = preco_total;
-    novo->vendas.id = *num_vendas;
-    novo->proximo = NULL;
-    novo->anterior = NULL;
-    
-    if (*inicio_vendas == NULL) {
-        *inicio_vendas = novo;
-        *fim_vendas = novo;
-    } else {
-        novo->anterior = *fim_vendas;
-        (*fim_vendas)->proximo = novo;
-        *fim_vendas = novo;
-    }
-    
-    (*num_vendas)++;
 }
