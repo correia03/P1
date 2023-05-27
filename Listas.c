@@ -754,7 +754,7 @@ typedef struct lista_vendas
 } lista_vendas;
 */
 // adicionar venda e remover o stock ao produto que esta na lista dos produtos
-void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, lista **iniciolista, int *num_produtos, clientes *clientes, int *num_clientes) {
+void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, lista **iniciolista, clientes *clientes) {
     int numero_cliente;
     printf("Numero do cliente: ");
     scanf("%d", &numero_cliente);
