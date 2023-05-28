@@ -1,5 +1,5 @@
 #include "listas.h"
-// funçao para adicionar categorias 
+// funçao para adicionar categorias
 void adicionar_categoria(categoria *categorias, int *num_categorias)
 {
     char nome[100];
@@ -87,10 +87,9 @@ void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos,
         printf("Erro ao alocar memória!\n");
         return;
     }
-    
-    produto novo_produto ;
 
-    
+    produto novo_produto;
+
     novo_produto.categoria = malloc(sizeof(categoria));
     if (novo_produto.categoria == NULL)
     {
@@ -209,7 +208,7 @@ void remover_produto(lista **iniciolista, lista **fimlista)
         atual = atual->proximo;
     }
 }
-//funçao para retirar o stock de um produto
+// funçao para retirar o stock de um produto
 void retirar_stock(lista *iniciolista)
 {
     // listar produtos
@@ -228,7 +227,7 @@ void retirar_stock(lista *iniciolista)
         atual = atual->proximo;
     }
 }
-//funçao para adicionar o stock de um produto
+// funçao para adicionar o stock de um produto
 void adicionar_stock(lista *iniciolista)
 {
     // listar produtos
@@ -250,7 +249,7 @@ void adicionar_stock(lista *iniciolista)
         atual = atual->proximo;
     }
 }
-//funçao para atualizar o produto
+// funçao para atualizar o produto
 void atualizar_produto(lista *iniciolista, categoria *categorias, int *num_categorias)
 {
     // listar produtos
@@ -309,21 +308,21 @@ void ordenar_preco_desc(lista *iniciolista)
         // Lista vazia ou com apenas um elemento, não há necessidade de ordenação
         return;
     }
-    
+
     int trocou;
     lista *atual;
     lista *ultimo = NULL;
-    
+
     do
     {
         trocou = 0;
         atual = iniciolista;
-        
+
         while (atual->proximo != ultimo)
         {
             produto p1 = atual->produto;
             produto p2 = atual->proximo->produto;
-            
+
             if (p1.preco < p2.preco)
             {
                 // Trocar os produtos
@@ -335,8 +334,7 @@ void ordenar_preco_desc(lista *iniciolista)
             atual = atual->proximo;
         }
         ultimo = atual;
-    }
-    while (trocou);
+    } while (trocou);
 }
 // função para listar produtos por ordem alfabética
 void ordenar_produtos(lista *iniciolista)
@@ -346,21 +344,21 @@ void ordenar_produtos(lista *iniciolista)
         // Lista vazia ou com apenas um elemento, não há necessidade de ordenação
         return;
     }
-    
+
     int trocou;
     lista *atual;
     lista *ultimo = NULL;
-    
+
     do
     {
         trocou = 0;
         atual = iniciolista;
-        
+
         while (atual->proximo != ultimo)
         {
             produto p1 = atual->produto;
             produto p2 = atual->proximo->produto;
-            
+
             if (stricmp(p1.nome, p2.nome) > 0)
             {
                 // Trocar os produtos
@@ -369,38 +367,38 @@ void ordenar_produtos(lista *iniciolista)
                 atual->proximo->produto = temp;
                 trocou = 1;
             }
-            
+
             atual = atual->proximo;
         }
-        
+
         ultimo = atual;
     } while (trocou);
 }
-//listar produtos pelas categorias existentes percorrer as categorias verificar se a mesma existe depois verificar se tem produtos associados e se sim listar o produto
+// listar produtos pelas categorias existentes percorrer as categorias verificar se a mesma existe depois verificar se tem produtos associados e se sim listar o produto
 void listar_produtos_categoria(lista *iniciolista, categoria *categorias, int num_categorias)
 {
     for (int i = 0; i < num_categorias; i++)
     {
-        printf("Categoria: %s",categorias[i].nome);
+        printf("Categoria: %s", categorias[i].nome);
         lista *atual = iniciolista;
         while (atual != NULL)
         {
-          if (stricmp( categorias[i].identificador, atual->produto.categoria->identificador) == 0)
-           {
-               printf("\t-----------------------------------------------------------\n");
-               printf("Nome: %s\n", atual->produto.nome);
-               printf("Preco: %.2f\n", atual->produto.preco);
-               printf("SKU: %s\n", atual->produto.sku);
-               printf("Quantidade em stock: %d\n", atual->produto.quantidade);
-               printf("Numero do produto: %d\n", atual->produto.produto_numero);
-               printf("\t-----------------------------------------------------------\n");
+            if (stricmp(categorias[i].identificador, atual->produto.categoria->identificador) == 0)
+            {
+                printf("\t-----------------------------------------------------------\n");
+                printf("Nome: %s\n", atual->produto.nome);
+                printf("Preco: %.2f\n", atual->produto.preco);
+                printf("SKU: %s\n", atual->produto.sku);
+                printf("Quantidade em stock: %d\n", atual->produto.quantidade);
+                printf("Numero do produto: %d\n", atual->produto.produto_numero);
+                printf("\t-----------------------------------------------------------\n");
             }
-          atual = atual->proximo;
+            atual = atual->proximo;
         }
     }
 }
 
-//gerar relatorio produtos
+// gerar relatorio produtos
 void gerar_relatorio_produtos_categoria(lista *iniciolista, categoria *categorias, int num_categorias)
 {
     FILE *ficheiro = fopen("relatorio.txt", "w");
@@ -409,25 +407,25 @@ void gerar_relatorio_produtos_categoria(lista *iniciolista, categoria *categoria
         printf("Erro ao abrir ficheiro!\n");
         return;
     }
-    
+
     for (int i = 0; i < num_categorias; i++)
     {
-        fprintf(ficheiro, "Categoria: %s\n",categorias[i].nome);
+        fprintf(ficheiro, "Categoria: %s\n", categorias[i].nome);
         fprintf(ficheiro, "Produtos associados:\n");
         lista *atual = iniciolista;
         while (atual != NULL)
         {
-          if (stricmp( categorias[i].identificador, atual->produto.categoria->identificador) == 0)
-           {
-               fprintf(ficheiro, "\t-----------------------------------------------------------\n");
-               fprintf(ficheiro, "Nome: %s\n", atual->produto.nome);
-               fprintf(ficheiro, "Preco: %.2f\n", atual->produto.preco);
-               fprintf(ficheiro, "SKU: %s\n", atual->produto.sku);
-               fprintf(ficheiro, "Quantidade em stock: %d\n", atual->produto.quantidade);
-               fprintf(ficheiro, "Numero do produto: %d\n", atual->produto.produto_numero);
-               fprintf(ficheiro, "\t-----------------------------------------------------------\n");
+            if (stricmp(categorias[i].identificador, atual->produto.categoria->identificador) == 0)
+            {
+                fprintf(ficheiro, "\t-----------------------------------------------------------\n");
+                fprintf(ficheiro, "Nome: %s\n", atual->produto.nome);
+                fprintf(ficheiro, "Preco: %.2f\n", atual->produto.preco);
+                fprintf(ficheiro, "SKU: %s\n", atual->produto.sku);
+                fprintf(ficheiro, "Quantidade em stock: %d\n", atual->produto.quantidade);
+                fprintf(ficheiro, "Numero do produto: %d\n", atual->produto.produto_numero);
+                fprintf(ficheiro, "\t-----------------------------------------------------------\n");
             }
-          atual = atual->proximo;
+            atual = atual->proximo;
         }
     }
     fclose(ficheiro);
@@ -442,12 +440,12 @@ void guardar_categorias(categoria *categorias, int num_categorias)
         printf("Erro ao abrir ficheiro!\n");
         return;
     }
-    
+
     for (int i = 0; i < num_categorias; i++)
     {
         fprintf(ficheiro, "nome da categoria:%s identificador da categoria:%s\n", categorias[i].nome, categorias[i].identificador);
     }
-    
+
     fclose(ficheiro);
 }
 // ler as categorias do ficheiro de texto
@@ -459,12 +457,12 @@ void ler_categorias(categoria *categorias, int *num_categorias)
         printf("Erro ao abrir ficheiro!\n");
         return;
     }
-    
+
     while (fscanf(ficheiro, "nome da categoria:%s identificador da categoria:%s\n", categorias[*num_categorias].nome, categorias[*num_categorias].identificador) == 2)
     {
         (*num_categorias)++;
     }
-    
+
     fclose(ficheiro);
 }
 // guardar num ficheiro de texto os produtos
@@ -476,14 +474,14 @@ void guardar_produtos(lista *iniciolista)
         printf("Erro ao abrir ficheiro!\n");
         return;
     }
-    
+
     lista *atual = iniciolista;
     while (atual != NULL)
     {
         fprintf(ficheiro, "marca/nome:%s preco do produto:%.2f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n", atual->produto.nome, atual->produto.preco, atual->produto.sku, atual->produto.quantidade, atual->produto.categoria->nome, atual->produto.categoria->identificador, atual->produto.produto_numero);
         atual = atual->proximo;
     }
-    
+
     fclose(ficheiro);
 }
 // ler os produtos do ficheiro de texto
@@ -498,7 +496,7 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
     while (1)
     {
         produto p;
-        p.categoria = calloc(1,sizeof(categoria));
+        p.categoria = calloc(1, sizeof(categoria));
         if (p.categoria == NULL)
         {
             printf("Erro ao alocar memória!\n");
@@ -519,7 +517,7 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
         {
             free(p.categoria);
             free(novo);
-            break;  // Exit the loop if fscanf fails to read all values
+            break; // Exit the loop if fscanf fails to read all values
         }
         novo->produto = p;
 
@@ -557,7 +555,7 @@ void adicionar_cliente(clientes *cliente, int *num_clientes)
     scanf("%d", &nif);
     fflush(stdin);
     printf("Endereco do cliente: ");
-    scanf("%s",&endereco);
+    scanf("%s", &endereco);
     fflush(stdin);
     printf("Telefone do cliente: ");
     scanf("%d", &telefone);
@@ -581,7 +579,6 @@ void adicionar_cliente(clientes *cliente, int *num_clientes)
         cliente[*num_clientes].telefone = telefone;
     }
     (*num_clientes)++;
-    
 }
 // listar clientes
 void listar_clientes(clientes *cliente, int num_clientes)
@@ -597,7 +594,7 @@ void listar_clientes(clientes *cliente, int num_clientes)
         printf("\t-----------------------------------------------------------\n");
     }
 }
-//ordenar clientes por ordem alfabetica de nome
+// ordenar clientes por ordem alfabetica de nome
 void ordenar_clientes(clientes *cliente, int num_clientes)
 {
     for (int i = 0; i < num_clientes; i++)
@@ -613,7 +610,7 @@ void ordenar_clientes(clientes *cliente, int num_clientes)
         }
     }
 }
-//procurar e listar um cliente pelo nif
+// procurar e listar um cliente pelo nif
 void procurar_cliente(clientes *cliente, int num_clientes)
 {
     int nif_cliente;
@@ -663,38 +660,38 @@ void alterar_cliente(clientes *cliente, int num_clientes)
     {
         if (cliente[i].cliente_numero == numero_cliente)
         {
-             char nome[100];
-             int nif;
-             char endereco[100];
-             int telefone;
-             printf("Nome do cliente: ");
-             scanf("%s", &nome);
-             fflush(stdin);
-             printf("NIF do cliente: ");
-             scanf("%d", &nif);
-             fflush(stdin);
-             printf("Endereco do cliente: ");
-             scanf("%s",&endereco);
-             fflush(stdin);
-             printf("Telefone do cliente: ");
-             scanf("%d", &telefone);
-             fflush(stdin);
-             printf("pretende anonimizar os seus dados? (s/n)\n");
-             char anonimizar;
-             scanf("%c", &anonimizar);
-             if (anonimizar == 's')
-                {
-                   strcpy(cliente[numero_cliente].nome, "anonimo");
-                   cliente[numero_cliente].nif = 0;
-                   strcpy(cliente[numero_cliente].endereco, "anonimo");
-                   cliente[numero_cliente].telefone = 0;
-                 }
-             else
-              {
-                  strcpy(cliente[numero_cliente].nome, nome);
-                  cliente[numero_cliente].nif = nif;
-                  strcpy(cliente[numero_cliente].endereco, endereco);
-                  cliente[numero_cliente].telefone = telefone;
+            char nome[100];
+            int nif;
+            char endereco[100];
+            int telefone;
+            printf("Nome do cliente: ");
+            scanf("%s", &nome);
+            fflush(stdin);
+            printf("NIF do cliente: ");
+            scanf("%d", &nif);
+            fflush(stdin);
+            printf("Endereco do cliente: ");
+            scanf("%s", &endereco);
+            fflush(stdin);
+            printf("Telefone do cliente: ");
+            scanf("%d", &telefone);
+            fflush(stdin);
+            printf("pretende anonimizar os seus dados? (s/n)\n");
+            char anonimizar;
+            scanf("%c", &anonimizar);
+            if (anonimizar == 's')
+            {
+                strcpy(cliente[numero_cliente].nome, "anonimo");
+                cliente[numero_cliente].nif = 0;
+                strcpy(cliente[numero_cliente].endereco, "anonimo");
+                cliente[numero_cliente].telefone = 0;
+            }
+            else
+            {
+                strcpy(cliente[numero_cliente].nome, nome);
+                cliente[numero_cliente].nif = nif;
+                strcpy(cliente[numero_cliente].endereco, endereco);
+                cliente[numero_cliente].telefone = telefone;
             }
             break;
         }
@@ -754,15 +751,16 @@ typedef struct lista_vendas
 } lista_vendas;
 */
 // adicionar venda e remover o stock ao produto que esta na lista dos produtos
-void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, lista **iniciolista, clientes *clientes) {
+void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, lista **iniciolista, clientes *clientes)
+{
     int numero_cliente;
     printf("Numero do cliente: ");
     scanf("%d", &numero_cliente);
-    
+
     int numero_produto;
     int quantidade;
     Data data;
-    
+
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
     data.ano = tm->tm_year + 1900;
@@ -770,58 +768,68 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     data.dia = tm->tm_mday;
     data.hora = tm->tm_hour;
     data.minuto = tm->tm_min;
-    
+
     char adicionar;
-    do {
-        //listar produtos
+    do
+    {
+        // listar produtos
         listar_produtos(*iniciolista);
         printf("Numero do produto: ");
         scanf("%d", &numero_produto);
-        
+
         printf("Quantidade: ");
         scanf("%d", &quantidade);
-        
-        // Percorrer a lista de produtos para verificar se o número é igual e se a quantidade escolhida é suficiente 
+
+        // Percorrer a lista de produtos para verificar se o número é igual e se a quantidade escolhida é suficiente
         lista *aux = *iniciolista;
-        while (aux != NULL) {
-            if (aux->produto.produto_numero == numero_produto) {
-                if (aux->produto.quantidade >= quantidade) {
+        while (aux != NULL)
+        {
+            if (aux->produto.produto_numero == numero_produto)
+            {
+                if (aux->produto.quantidade >= quantidade)
+                {
                     int quantidade_total = 0;
                     float preco_total = 0;
                     aux->produto.quantidade -= quantidade;
                     quantidade_total += quantidade;
                     preco_total += aux->produto.preco * quantidade;
                     lista_vendas *novo = (lista_vendas *)malloc(sizeof(lista_vendas));
-                     novo->vendas.cliente = clientes[numero_cliente];
-                     novo->vendas.data = data;
-                     novo->vendas.quantidade_total = quantidade_total;
-                     novo->vendas.preco_total = preco_total;
-                     novo->vendas.id = *num_vendas;
-                     novo->proximo = NULL;
-                     novo->anterior = NULL;
-    
-                      if (*inicio_vendas == NULL) {
-                            *inicio_vendas = novo;
-                            *fim_vendas = novo;
-                      } else {
-                         novo->anterior = *fim_vendas;
+                    novo->vendas.cliente = clientes[numero_cliente];
+                    novo->vendas.data = data;
+                    novo->vendas.quantidade_total = quantidade_total;
+                    novo->vendas.preco_total = preco_total;
+                    novo->vendas.id = *num_vendas;
+                    novo->proximo = NULL;
+                    novo->anterior = NULL;
+
+                    if (*inicio_vendas == NULL)
+                    {
+                        *inicio_vendas = novo;
+                        *fim_vendas = novo;
+                    }
+                    else
+                    {
+                        novo->anterior = *fim_vendas;
                         (*fim_vendas)->proximo = novo;
-                         *fim_vendas = novo;
-                     }
-    
-                 (*num_vendas)++;
+                        *fim_vendas = novo;
+                    }
+
+                    (*num_vendas)++;
                     break;
-                } else {
+                }
+                else
+                {
                     printf("Quantidade insuficiente!\n");
                     break;
                 }
             }
             aux = aux->proximo;
         }
-        if (aux == NULL) {
+        if (aux == NULL)
+        {
             printf("Produto nao encontrado!\n");
         }
-        
+
         printf("Deseja adicionar outra venda? (s/n) ");
         scanf(" %c", &adicionar);
     } while (adicionar == 's');
