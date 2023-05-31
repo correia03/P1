@@ -132,8 +132,9 @@ void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos,
         return;
     }
     // incrementar o total de produtos
-    (*num_produtos)++;
     novo_produto.produto_numero = (*num_produtos);
+    (*num_produtos)++;
+   
     // adicionar o produto à lista
     novo->produto = novo_produto;
     novo->anterior = NULL;
@@ -300,23 +301,23 @@ void atualizar_produto(lista *iniciolista, categoria *categorias, int *num_categ
         atual = atual->proximo;
     }
 }
-// ordem descendente de preço.
-void ordenar_preco_desc(lista *iniciolista, lista **fimlista)
+//ordem descencente de preço
+void ordenar_preco_desc(lista** iniciolista, lista** fimlista)
 {
-    if (iniciolista == NULL || iniciolista->proximo == NULL)
+    if (*iniciolista == NULL || (*iniciolista)->proximo == NULL)
     {
         // Lista vazia ou com apenas um elemento, não há necessidade de ordenação
         return;
     }
 
     int trocou;
-    lista *atual;
-    lista *ultimo = NULL;
+    lista* atual;
+    lista* ultimo = NULL;
 
     do
     {
         trocou = 0;
-        atual = iniciolista;
+        atual = *iniciolista;
 
         while (atual->proximo != ultimo)
         {
@@ -331,30 +332,32 @@ void ordenar_preco_desc(lista *iniciolista, lista **fimlista)
                 atual->proximo->produto = temp;
                 trocou = 1;
             }
+            
             atual = atual->proximo;
         }
+        
         ultimo = atual;
     } while (trocou);
-    ultimo->proximo=null;
-    *fimlista=ultimo;
+
+    (*fimlista)->proximo = NULL;
 }
-// função para listar produtos por ordem alfabética
-void ordenar_produtos(lista *iniciolista, lista **fimlista)
+//ordenar por ordem alfabetica
+void ordenar_produtos_alfabetica(lista** iniciolista, lista** fimlista)
 {
-    if (iniciolista == NULL || iniciolista->proximo == NULL)
+    if (*iniciolista == NULL || (*iniciolista)->proximo == NULL)
     {
         // Lista vazia ou com apenas um elemento, não há necessidade de ordenação
         return;
     }
 
     int trocou;
-    lista *atual;
-    lista *ultimo = NULL;
+    lista* atual;
+    lista* ultimo = NULL;
 
     do
     {
         trocou = 0;
-        atual = iniciolista;
+        atual = *iniciolista;
 
         while (atual->proximo != ultimo)
         {
@@ -375,9 +378,10 @@ void ordenar_produtos(lista *iniciolista, lista **fimlista)
 
         ultimo = atual;
     } while (trocou);
-    ultimo->proximo=null;
-    *fimlista=ultimo;
+
+    *fimlista = ultimo;
 }
+
 // listar produtos pelas categorias existentes 
 void listar_produtos_categoria(lista *iniciolista, categoria *categorias, int num_categorias)
 {
@@ -470,35 +474,76 @@ void ler_categorias(categoria *categorias, int *num_categorias)
     fclose(ficheiro);
 }
 // guardar num ficheiro de texto os produtos
-void guardar_produtos(lista *iniciolista)
+void guardar_produtos(lista* iniciolista)
 {
-    lista *temp= NULL;
-
-    categoria *tempc =NULL;
-    
-    FILE *ficheiro = fopen("produtos.txt", "w");
+    FILE* ficheiro = fopen("produtos.txt", "w");
     if (ficheiro == NULL)
     {
         printf("Erro ao abrir ficheiro!\n");
         return;
     }
 
-    lista *atual = iniciolista;
+    lista* atual = iniciolista;
     while (atual != NULL)
     {
-        fprintf(ficheiro, "marca/nome:%s preco do produto:%.2f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n", atual->produto.nome, atual->produto.preco, atual->produto.sku, atual->produto.quantidade, atual->produto.categoria->nome, atual->produto.categoria->identificador, atual->produto.produto_numero);
-        temp = malloc(sizeof(lista));
-        tempc = malloc(sizeof(categoria));
-        temp = atual->proximo;
-        tempc = atual->produto.categoria;
-          free(atual);
-          free(tempc);
-        atual = temp;
+        fprintf(ficheiro, "marca/nome:%s preco do produto:%.2f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n",
+                atual->produto.nome, atual->produto.preco, atual->produto.sku, atual->produto.quantidade,
+                atual->produto.categoria->nome, atual->produto.categoria->identificador, atual->produto.produto_numero);
+
+        lista* temp = atual;
+        categoria* tempc = atual->produto.categoria;
+
+        atual = atual->proximo;
+
+        free(temp);
+        free(tempc);
     }
+
     fclose(ficheiro);
 }
+//ordenar produtos por ids
+void ordenar_produtos_ids(lista** iniciolista, lista** fimlista)
+{
+    if (*iniciolista == NULL || (*iniciolista)->proximo == NULL)
+    {
+        // Lista vazia ou com apenas um elemento, não há necessidade de ordenação
+        return;
+    }
+
+    int trocou;
+    lista* atual;
+    lista* ultimo = NULL;
+
+    do
+    {
+        trocou = 0;
+        atual = *iniciolista;
+
+        while (atual->proximo != ultimo)
+        {
+            produto p1 = atual->produto;
+            produto p2 = atual->proximo->produto;
+
+            if (p1.produto_numero > p2.produto_numero)
+            {
+                // Trocar os produtos
+                produto temp = atual->produto;
+                atual->produto = atual->proximo->produto;
+                atual->proximo->produto = temp;
+                trocou = 1;
+            }
+            
+            atual = atual->proximo;
+        }
+        
+        ultimo = atual;
+    } while (trocou);
+
+    *fimlista = ultimo;
+}
+
 // ler os produtos do ficheiro de texto
-void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias, int *num_categorias)
+void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias)
 {
     FILE *ficheiro = fopen("produtos.txt", "r");
     if (ficheiro == NULL)
@@ -612,7 +657,7 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
     strcpy(novo->clientes.endereco, endereco);
     novo->clientes.telefone = telefone;
     }
-    novo->clientes.cliente_numero = numclientes;
+    novo->clientes.cliente_numero = *numclientes;
     novo->anterior = NULL;
     novo->proximo = NULL;
 
@@ -723,16 +768,16 @@ void procurar_cliente(lista_clientes *iniciolista,int *num_clientes)
     printf("Cliente nao encontrado!\n");
 }
 // remover cliente
-void remover_cliente(lista)
+void remover_cliente()
 {
 
 }
 // alterar cliente (rever ainda nao completo)
-void alterar_cliente(clientes *cliente, int num_clientes)
+void alterar_cliente()
 {
 }
 // guardar num ficheiro binario .dat
-void guardar_clientes(clientes *cliente, int num_clientes)
+void guardar_clientes()
 {
     FILE *ficheiro;
     ficheiro = fopen("clientes.dat", "wb");
@@ -743,7 +788,7 @@ void guardar_clientes(clientes *cliente, int num_clientes)
     }
 }
 // carregar ficheiro binario .dat
-void ler_clientes(clientes *cliente, int *num_clientes)
+void ler_clientes()
 {
 }
 // VENDA
@@ -772,7 +817,7 @@ typedef struct lista_vendas
 } lista_vendas;
 */
 // adicionar venda e remover o stock ao produto que esta na lista dos produtos
-void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, lista **iniciolista, clientes *clientes)
+void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, lista **iniciolista)
 {
     int numero_cliente;
     printf("Numero do cliente: ");
@@ -820,9 +865,7 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
                     quantidade_total += quantidade;
                     preco_total += aux->produto.preco * quantidade * desconto;
                     lista_vendas *novo = (lista_vendas *)malloc(sizeof(lista_vendas));
-                    novo->vendas.cliente = clientes[numero_cliente];
                     novo->vendas.data = data;
-                    novo->vendas.nomedoproduto[100] = aux->produto.nome[100];
                     novo->vendas.desconto = desconto;
                     novo->vendas.quantidade_total = quantidade_total;
                     novo->vendas.preco_total = preco_total;

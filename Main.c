@@ -13,11 +13,11 @@ int main()
     lista_vendas *fimlista_vendas = NULL;
     lista_clientes *iniciolistaclientes = NULL;
     lista_clientes *fimlistaclientes = NULL;
-    int num_produtos, num_vendas, num_clientes = 0;
+    int num_produtos = 0;
+    int num_vendas, num_clientes = 0;
     categoria categorias[100];
-    clientes clientes[1000];
     ler_categorias(categorias, &num_categorias);
-    ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias, &num_categorias);
+    ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias);
     ler_clientes();
     do
     {
@@ -69,12 +69,14 @@ int main()
                             switch (op3)
                             {
                             case 1:
-                                ordenar_produtos(iniciolista);
+                                ordenar_produtos_alfabetica(&iniciolista,&fimlista);
                                 listar_produtos(iniciolista);
+                                ordenar_produtos_ids(&iniciolista,&fimlista);
                                 break;
                             case 2:
-                                ordenar_preco_desc(iniciolista);
+                                ordenar_preco_desc(&iniciolista,&fimlista);
                                 listar_produtos(iniciolista);
+                                ordenar_produtos_ids(&iniciolista,&fimlista);
                             break;
                             default:
                                 break;
@@ -111,7 +113,7 @@ int main()
             } while (op != 0);
             break;
         case 2:
-            do
+           /* do
             {
                 op = menugerirVendaseClientes();
                 switch (op)
@@ -174,12 +176,12 @@ int main()
                             break;
                         }
                         break;
-                    } while (op2 != 0);*/ 
+                    } while (op2 != 0); 
                     break;
                 default:
                     break;
                 }
-            } while (op != 0);
+            } while (op != 0);*/
             break;
         case 0:
             printf("A sair...\n");
