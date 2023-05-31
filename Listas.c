@@ -89,7 +89,7 @@ void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos,
     }
 
     produto novo_produto;
-
+    novo_produto.categoria = NULL;
     novo_produto.categoria = malloc(sizeof(categoria));
     if (novo_produto.categoria == NULL)
     {
@@ -301,7 +301,7 @@ void atualizar_produto(lista *iniciolista, categoria *categorias, int *num_categ
     }
 }
 // ordem descendente de preço.
-void ordenar_preco_desc(lista *iniciolista)
+void ordenar_preco_desc(lista *iniciolista, lista **fimlista)
 {
     if (iniciolista == NULL || iniciolista->proximo == NULL)
     {
@@ -335,9 +335,11 @@ void ordenar_preco_desc(lista *iniciolista)
         }
         ultimo = atual;
     } while (trocou);
+    ultimo->proximo=null;
+    *fimlista=ultimo;
 }
 // função para listar produtos por ordem alfabética
-void ordenar_produtos(lista *iniciolista)
+void ordenar_produtos(lista *iniciolista, lista **fimlista)
 {
     if (iniciolista == NULL || iniciolista->proximo == NULL)
     {
@@ -373,8 +375,10 @@ void ordenar_produtos(lista *iniciolista)
 
         ultimo = atual;
     } while (trocou);
+    ultimo->proximo=null;
+    *fimlista=ultimo;
 }
-// listar produtos pelas categorias existentes percorrer as categorias verificar se a mesma existe depois verificar se tem produtos associados e se sim listar o produto
+// listar produtos pelas categorias existentes 
 void listar_produtos_categoria(lista *iniciolista, categoria *categorias, int num_categorias)
 {
     for (int i = 0; i < num_categorias; i++)
@@ -468,6 +472,10 @@ void ler_categorias(categoria *categorias, int *num_categorias)
 // guardar num ficheiro de texto os produtos
 void guardar_produtos(lista *iniciolista)
 {
+    lista *temp= NULL;
+
+    categoria *tempc =NULL;
+    
     FILE *ficheiro = fopen("produtos.txt", "w");
     if (ficheiro == NULL)
     {
@@ -479,9 +487,14 @@ void guardar_produtos(lista *iniciolista)
     while (atual != NULL)
     {
         fprintf(ficheiro, "marca/nome:%s preco do produto:%.2f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n", atual->produto.nome, atual->produto.preco, atual->produto.sku, atual->produto.quantidade, atual->produto.categoria->nome, atual->produto.categoria->identificador, atual->produto.produto_numero);
-        atual = atual->proximo;
+        temp = malloc(sizeof(lista));
+        tempc = malloc(sizeof(categoria));
+        temp = atual->proximo;
+        tempc = atual->produto.categoria;
+          free(atual);
+          free(tempc);
+        atual = temp;
     }
-
     fclose(ficheiro);
 }
 // ler os produtos do ficheiro de texto
@@ -541,161 +554,182 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
 
     fclose(ficheiro);
 }
-// adicionar cliente
-void adicionar_cliente(clientes *cliente, int *num_clientes)
+/*
+typedef struct clientes
 {
     char nome[100];
     int nif;
     char endereco[100];
     int telefone;
+    int cliente_numero;
+
+}clientes;
+typedef struct lista_clientes
+{
+    clientes clientes;
+    struct lista_clientes *proximo;
+    struct lista_clientes *anterior;
+} lista_clientes;
+*/
+// adicionar cliente
+void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fimlistaclientes,int *numclientes)
+{
+    char nome[100];
+    int nif;
+    char endereco[100];
+    int telefone;
+    lista_clientes *novo = calloc(1, sizeof(lista_clientes));
+    if (novo == NULL)
+    {
+        printf("Erro ao alocar memória!\n");
+        return;
+    }
     printf("Nome do cliente: ");
-    scanf("%s", &nome);
+    scanf("%s", &nome[100] );
     fflush(stdin);
     printf("NIF do cliente: ");
     scanf("%d", &nif);
     fflush(stdin);
     printf("Endereco do cliente: ");
-    scanf("%s", &endereco);
+    scanf("%s", &endereco[100]);
     fflush(stdin);
     printf("Telefone do cliente: ");
     scanf("%d", &telefone);
-    fflush(stdin);
-    cliente[*num_clientes].cliente_numero = *num_clientes;
-    printf("pretende anonimizar os seus dados? (s/n)\n");
-    char anonimizar;
-    scanf("%c", &anonimizar);
-    if (anonimizar == 's')
+    //anonamizar dados caso pedido pelo utilizador
+    printf("pretende anonamizar os seus dados? (s/n)");
+    char anon;
+    scanf("%c", &anon);
+    if (anon == 's')
     {
-        strcpy(cliente[*num_clientes].nome, "anonimo");
-        cliente[*num_clientes].nif = 0;
-        strcpy(cliente[*num_clientes].endereco, "anonimo");
-        cliente[*num_clientes].telefone = 0;
+        strcpy(nome, "anonimo");
+        nif = 999999999;
+        strcpy(endereco, "anonimo");
+        telefone = 911111111;
+    }
+    else{
+    strcpy(novo->clientes.nome, nome);
+    novo->clientes.nif = nif;
+    strcpy(novo->clientes.endereco, endereco);
+    novo->clientes.telefone = telefone;
+    }
+    novo->clientes.cliente_numero = numclientes;
+    novo->anterior = NULL;
+    novo->proximo = NULL;
+
+    // Add the new product to the list
+    if (*iniciolistaclientes == NULL)
+    {
+        *iniciolistaclientes = novo;
+        *fimlistaclientes = novo;
     }
     else
     {
-        strcpy(cliente[*num_clientes].nome, nome);
-        cliente[*num_clientes].nif = nif;
-        strcpy(cliente[*num_clientes].endereco, endereco);
-        cliente[*num_clientes].telefone = telefone;
+        novo->anterior = *fimlistaclientes;
+        (*fimlistaclientes)->proximo = novo;
+        *fimlistaclientes = novo;
     }
-    (*num_clientes)++;
+    numclientes++;
+
 }
 // listar clientes
-void listar_clientes(clientes *cliente, int num_clientes)
+void listar_clientes(lista_clientes *iniciolistaclientes)
 {
-    for (int i = 0; i < num_clientes; i++)
+    lista_clientes *atual = iniciolistaclientes;
+    while (atual != NULL)
     {
-        printf("\t-----------------------------------------------------------\n");
-        printf("Nome do cliente: %s\n", cliente[i].nome);
-        printf("NIF do cliente: %d\n", cliente[i].nif);
-        printf("Endereco do cliente: %s\n", cliente[i].endereco);
-        printf("Telefone do cliente: %d\n", cliente[i].telefone);
-        printf("Numero do cliente: %d\n", cliente[i].cliente_numero);
-        printf("\t-----------------------------------------------------------\n");
+        printf("Nome do cliente: %s\n", atual->clientes.nome);
+        printf("NIF do cliente: %d\n", atual->clientes.nif);
+        printf("Endereco do cliente: %s\n", atual->clientes.endereco);
+        printf("Telefone do cliente: %d\n", atual->clientes.telefone);
+        printf("Numero do cliente: %d\n", atual->clientes.cliente_numero);
+        atual = atual->proximo;
     }
+
 }
-// ordenar clientes por ordem alfabetica de nome
-void ordenar_clientes(clientes *cliente, int num_clientes)
+//funçao para ordenar a lista por ordem afabetica de  nome
+void ordenar_clientes(lista_clientes **iniciolistaclientes, lista_clientes **fimlistaclientes, int num_clientes)
 {
-    for (int i = 0; i < num_clientes; i++)
+    lista_clientes *atual = *iniciolistaclientes;
+    lista_clientes *seguinte = atual->proximo;
+    lista_clientes *anterior = atual->anterior;
+    int i, j;
+    for (i = 0; i < num_clientes; i++)
     {
-        for (int j = i + 1; j < num_clientes; j++)
+        for (j = 0; j < num_clientes - 1; j++)
         {
-            if (stricmp(cliente[i].nome, cliente[j].nome) > 0)
+            if (strcmp(atual->clientes.nome, seguinte->clientes.nome) > 0)
             {
-                clientes temp = cliente[i];
-                cliente[i] = cliente[j];
-                cliente[j] = temp;
+                if (atual == *iniciolistaclientes)
+                {
+                    atual->proximo = seguinte->proximo;
+                    seguinte->anterior = NULL;
+                    seguinte->proximo = atual;
+                    atual->anterior = seguinte;
+                    *iniciolistaclientes = seguinte;
+                    seguinte = atual->proximo;
+                    seguinte->anterior = atual;
+                }
+                else if (seguinte == *fimlistaclientes)
+                {
+                    atual->anterior->proximo = seguinte;
+                    seguinte->anterior = atual->anterior;
+                    seguinte->proximo = atual;
+                    atual->anterior = seguinte;
+                    atual->proximo = NULL;
+                    *fimlistaclientes = atual;
+                    seguinte = atual->proximo;
+                }
+                else
+                {
+                    atual->anterior->proximo = seguinte;
+                    seguinte->anterior = atual->anterior;
+                    seguinte->proximo = atual;
+                    atual->anterior = seguinte;
+                    atual->proximo = seguinte->proximo;
+                    seguinte->proximo->anterior = atual;
+                    seguinte = atual->proximo;
+                }
+            }
+            else
+            {
+                atual = atual->proximo;
+                seguinte = atual->proximo;
             }
         }
+        atual = *iniciolistaclientes;
+        seguinte = atual->proximo;
     }
 }
 // procurar e listar um cliente pelo nif
-void procurar_cliente(clientes *cliente, int num_clientes)
+void procurar_cliente(lista_clientes *iniciolista,int *num_clientes)
 {
-    int nif_cliente;
-    printf("NIF do cliente a procurar: ");
-    scanf("%d", &nif_cliente);
-    for (int i = 0; i < num_clientes; i++)
+    int nif;
+    printf("NIF do cliente: ");
+    scanf("%d", &nif);
+    lista_clientes *atual = iniciolista;
+    while (atual != NULL)
     {
-        if (cliente[i].nif == nif_cliente)
+        if (atual->clientes.nif == nif)
         {
-            printf("\t-----------------------------------------------------------\n");
-            printf("Nome do cliente: %s\n", cliente[i].nome);
-            printf("NIF do cliente: %d\n", cliente[i].nif);
-            printf("Endereco do cliente: %s\n", cliente[i].endereco);
-            printf("Telefone do cliente: %d\n", cliente[i].telefone);
-            printf("Numero do cliente: %d\n", cliente[i].cliente_numero);
-            printf("\t-----------------------------------------------------------\n");
-            break;
+            printf("Nome do cliente: %s\n", atual->clientes.nome);
+            printf("NIF do cliente: %d\n", atual->clientes.nif);
+            printf("Endereco do cliente: %s\n", atual->clientes.endereco);
+            printf("Telefone do cliente: %d\n", atual->clientes.telefone);
+            printf("Numero do cliente: %d\n", atual->clientes.cliente_numero);
+            return;
         }
+        atual = atual->proximo;
     }
+    printf("Cliente nao encontrado!\n");
 }
 // remover cliente
-void remover_cliente(clientes *cliente, int *num_clientes)
+void remover_cliente(lista)
 {
-    int numero_cliente;
-    printf("Numero do cliente a remover: ");
-    scanf("%d", &numero_cliente);
-    for (int i = 0; i < *num_clientes; i++)
-    {
-        if (cliente[i].cliente_numero == numero_cliente)
-        {
-            for (int j = i; j < *num_clientes - 1; j++)
-            {
-                cliente[j] = cliente[j + 1];
-            }
-            (*num_clientes)--;
-            break;
-        }
-    }
+
 }
 // alterar cliente (rever ainda nao completo)
 void alterar_cliente(clientes *cliente, int num_clientes)
 {
-    int numero_cliente;
-    printf("Numero do cliente a alterar: ");
-    scanf("%d", &numero_cliente);
-    for (int i = 0; i < num_clientes; i++)
-    {
-        if (cliente[i].cliente_numero == numero_cliente)
-        {
-            char nome[100];
-            int nif;
-            char endereco[100];
-            int telefone;
-            printf("Nome do cliente: ");
-            scanf("%s", &nome);
-            fflush(stdin);
-            printf("NIF do cliente: ");
-            scanf("%d", &nif);
-            fflush(stdin);
-            printf("Endereco do cliente: ");
-            scanf("%s", &endereco);
-            fflush(stdin);
-            printf("Telefone do cliente: ");
-            scanf("%d", &telefone);
-            fflush(stdin);
-            printf("pretende anonimizar os seus dados? (s/n)\n");
-            char anonimizar;
-            scanf("%c", &anonimizar);
-            if (anonimizar == 's')
-            {
-                strcpy(cliente[numero_cliente].nome, "anonimo");
-                cliente[numero_cliente].nif = 0;
-                strcpy(cliente[numero_cliente].endereco, "anonimo");
-                cliente[numero_cliente].telefone = 0;
-            }
-            else
-            {
-                strcpy(cliente[numero_cliente].nome, nome);
-                cliente[numero_cliente].nif = nif;
-                strcpy(cliente[numero_cliente].endereco, endereco);
-                cliente[numero_cliente].telefone = telefone;
-            }
-            break;
-        }
-    }
 }
 // guardar num ficheiro binario .dat
 void guardar_clientes(clientes *cliente, int num_clientes)
@@ -707,23 +741,10 @@ void guardar_clientes(clientes *cliente, int num_clientes)
         printf("Erro ao abrir ficheiro!\n");
         return;
     }
-    fwrite(&num_clientes, sizeof(int), 1, ficheiro);
-    fwrite(cliente, sizeof(clientes), num_clientes, ficheiro);
-    fclose(ficheiro);
 }
 // carregar ficheiro binario .dat
 void ler_clientes(clientes *cliente, int *num_clientes)
 {
-    FILE *ficheiro;
-    ficheiro = fopen("clientes.dat", "rb");
-    if (ficheiro == NULL)
-    {
-        printf("Erro ao abrir ficheiro!\n");
-        return;
-    }
-    fread(num_clientes, sizeof(int), 1, ficheiro);
-    fread(cliente, sizeof(clientes), *num_clientes, ficheiro);
-    fclose(ficheiro);
 }
 // VENDA
 /*
@@ -757,8 +778,7 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     printf("Numero do cliente: ");
     scanf("%d", &numero_cliente);
 
-    int numero_produto;
-    int quantidade;
+    
     Data data;
 
     time_t t = time(NULL);
@@ -772,6 +792,9 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     char adicionar;
     do
     {
+        int numero_produto = 0;
+        int quantidade = 0;
+        float desconto = 0;
         // listar produtos
         listar_produtos(*iniciolista);
         printf("Numero do produto: ");
@@ -779,6 +802,9 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
 
         printf("Quantidade: ");
         scanf("%d", &quantidade);
+        fflush(stdin);
+        printf("desconto aplicado: (escrever o desconto nete formato 0.)");
+        scanf("%f", &desconto);
 
         // Percorrer a lista de produtos para verificar se o número é igual e se a quantidade escolhida é suficiente
         lista *aux = *iniciolista;
@@ -792,10 +818,12 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
                     float preco_total = 0;
                     aux->produto.quantidade -= quantidade;
                     quantidade_total += quantidade;
-                    preco_total += aux->produto.preco * quantidade;
+                    preco_total += aux->produto.preco * quantidade * desconto;
                     lista_vendas *novo = (lista_vendas *)malloc(sizeof(lista_vendas));
                     novo->vendas.cliente = clientes[numero_cliente];
                     novo->vendas.data = data;
+                    novo->vendas.nomedoproduto[100] = aux->produto.nome[100];
+                    novo->vendas.desconto = desconto;
                     novo->vendas.quantidade_total = quantidade_total;
                     novo->vendas.preco_total = preco_total;
                     novo->vendas.id = *num_vendas;

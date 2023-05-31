@@ -35,6 +35,12 @@ typedef struct clientes
     int cliente_numero;
 
 }clientes;
+typedef struct lista_clientes
+{
+    clientes clientes;
+    struct lista_clientes *proximo;
+    struct lista_clientes *anterior;
+} lista_clientes;
 
 typedef struct {
     int ano;
@@ -45,8 +51,10 @@ typedef struct {
 } Data;
 typedef struct vendas
 {
-    clientes cliente;
+    int idcliente;
     Data data;
+    int idproduto;
+    float desconto;
     int quantidade_total;
     float preco_total;
     int id;

@@ -11,12 +11,14 @@ int main()
     lista *fimlista = NULL;
     lista_vendas *iniciolista_vendas = NULL;
     lista_vendas *fimlista_vendas = NULL;
+    lista_clientes *iniciolistaclientes = NULL;
+    lista_clientes *fimlistaclientes = NULL;
     int num_produtos, num_vendas, num_clientes = 0;
     categoria categorias[100];
     clientes clientes[1000];
     ler_categorias(categorias, &num_categorias);
     ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias, &num_categorias);
-    ler_clientes(clientes, &num_clientes);
+    ler_clientes();
     do
     {
         opcao = menu();
@@ -121,7 +123,7 @@ int main()
                         switch (op2)
                         {
                         case 1:
-                            adicionar_cliente(clientes,&num_clientes);
+                            adicionar_cliente();
                             break;
                         case 2:
                             do{
@@ -129,11 +131,11 @@ int main()
                                 switch (op3)
                                 {
                                  case 1:
-                                     ordenar_clientes(clientes, num_clientes);
-                                     listar_clientes(clientes, num_clientes);
+                                     ordenar_clientes();
+                                     listar_clientes();
                                     break;
                                  case 2:
-                                    procurar_cliente(clientes,num_clientes);
+                                    procurar_cliente();
                                     break;
                                  default:
                                     break;
@@ -141,7 +143,7 @@ int main()
                             }while(op3 != 0);
                             break;
                         case 3:
-                            remover_cliente(clientes,&num_clientes);
+                            remover_cliente();
                             break;
                         case 4:
                         //alterar_cliente verificar
@@ -183,7 +185,7 @@ int main()
             printf("A sair...\n");
             guardar_categorias(categorias, num_categorias);
             guardar_produtos(iniciolista);
-            guardar_clientes(clientes,num_clientes);
+            guardar_clientes();
             break;
         default:
             break;
