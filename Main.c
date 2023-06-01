@@ -83,7 +83,7 @@ int main()
                             }
                             break;
                         case 3:
-                            remover_produto(&iniciolista,&fimlista);
+                            remover_produto(&iniciolista,&fimlista,&num_clientes);
                             break;
                         case 4:
                             atualizar_produto(iniciolista, categorias, &num_categorias);
