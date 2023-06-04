@@ -632,19 +632,20 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
         return;
     }
     printf("Nome do cliente: ");
-    scanf("%s", &nome[100] );
+    scanf("%s", nome );
     fflush(stdin);
     printf("NIF do cliente: ");
     scanf("%d", &nif);
     fflush(stdin);
     printf("Endereco do cliente: ");
-    scanf("%s", &endereco[100]);
+    scanf("%s", endereco);
     fflush(stdin);
     printf("Telefone do cliente: ");
     scanf("%d", &telefone);
     //anonamizar dados caso pedido pelo utilizador
     printf("pretende anonamizar os seus dados? (s/n)");
     char anon;
+    fflush(stdin);
     scanf("%c", &anon);
     if (anon == 's')
     {
@@ -733,7 +734,7 @@ void ordenar_clientes(lista_clientes **iniciolistaclientes, lista_clientes **fim
 
 }
 // procurar e listar um cliente pelo nif
-void procurar_cliente(lista_clientes *iniciolista,int *num_clientes)
+void procurar_cliente(lista_clientes *iniciolista)
 {
     int nif;
     printf("NIF do cliente: ");
@@ -792,7 +793,7 @@ void remover_cliente(lista_clientes **iniciolista, lista_clientes **fimlista,int
 
 }
 // alterar cliente (rever ainda nao completo)
-void alterar_cliente(lista_clientes *iniciolista)
+void atualizar_cliente(lista_clientes *iniciolista)
 {
     int nif;
     int telefone;
@@ -806,13 +807,13 @@ void alterar_cliente(lista_clientes *iniciolista)
         if (atual->clientes.nif == nif)
         {
             printf("Nome do cliente: ");
-            scanf("%s", &nome);
+            scanf("%s", nome);
             fflush(stdin);
             printf("NIF do cliente: ");
             scanf("%d", &nif);
             fflush(stdin);
             printf("Endereco do cliente: ");
-            scanf("%s", &endereco);
+            scanf("%s", endereco);
             fflush(stdin);
             printf("Telefone do cliente: ");
             scanf("%d", &telefone);
@@ -824,9 +825,9 @@ void alterar_cliente(lista_clientes *iniciolista)
             if (anon == 's')
             {
                 strcpy(atual->clientes.nome, "Anonimo");
-                atual->clientes.nif = 0;
+                atual->clientes.nif = 999999999;
                 strcpy(atual->clientes.endereco, "Anonimo");
-                atual->clientes.telefone = 0;
+                atual->clientes.telefone = 911111111;
             }
             else
             {
@@ -863,7 +864,7 @@ void guardar_clientes(lista_clientes *iniciolista)
 }
 
 // carregar ficheiro binario .dat
-void carregar_clientes(lista_clientes **iniciolista, lista_clientes **fimlista, int *num_clientes)
+void ler_clientes(lista_clientes **iniciolista, lista_clientes **fimlista, int *num_clientes)
 {
     FILE *ficheiro;
     ficheiro = fopen("clientes.dat", "rb");
@@ -876,7 +877,7 @@ void carregar_clientes(lista_clientes **iniciolista, lista_clientes **fimlista, 
     while (fread(&cliente, sizeof(clientes), 1, ficheiro))
     {
         lista_clientes *novo = NULL;
-        lista_clientes *novo = (lista_clientes *)malloc(sizeof(lista_clientes));
+        novo = (lista_clientes *)malloc(sizeof(lista_clientes));
         //VERIFICAR SE FOI POSSIVEL ALOCAR MEMORIA
         if (novo == NULL)
         {

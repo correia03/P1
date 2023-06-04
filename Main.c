@@ -18,7 +18,7 @@ int main()
     categoria categorias[100];
     ler_categorias(categorias, &num_categorias);
     ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias);
-    ler_clientes();
+    ler_clientes(&iniciolistaclientes,&fimlistaclientes, &num_clientes);
     do
     {
         opcao = menu();
@@ -113,8 +113,8 @@ int main()
             } while (op != 0);
             break;
         case 2:
-           /* do
-            {
+        //menugerirVendaseClientes()
+            do{
                 op = menugerirVendaseClientes();
                 switch (op)
                 {
@@ -125,69 +125,49 @@ int main()
                         switch (op2)
                         {
                         case 1:
-                            adicionar_cliente();
+                            adicionar_cliente(&iniciolistaclientes,&fimlistaclientes,&num_clientes);
                             break;
                         case 2:
-                            do{
-                            op3 = menulistarclientes();
+                            do
+                            {
+                                op3 = menulistarpor();
                                 switch (op3)
                                 {
-                                 case 1:
-                                     ordenar_clientes();
-                                     listar_clientes();
+                                case 1:
+                                    ordenar_clientes_alfabetica(&iniciolistaclientes,&fimlistaclientes);
+                                    listar_clientes(iniciolistaclientes);
                                     break;
-                                 case 2:
-                                    procurar_cliente();
+                                case 2:
+                                    procurar_cliente(iniciolistaclientes)
                                     break;
-                                 default:
+                                default:
                                     break;
                                 }
-                            }while(op3 != 0);
+                                
+                            } while (op3 != 0 );
                             break;
                         case 3:
-                            remover_cliente();
+                            remover_cliente(&iniciolistaclientes,&fimlistaclientes,&num_clientes);
                             break;
                         case 4:
-                        //alterar_cliente verificar
-                            alterar_cliente(clientes,num_clientes);
+                            atualizar_cliente(iniciolistaclientes);
                             break;
                         default:
                             break;
                         }
                     } while (op2 != 0);
-
                     break;
                 case 2:
-                   /*do
-                    {
-                        op2 = menugerirvendas();
-                        switch (op2)
-                        {
-                        case 1:
-                            adicionar_venda();
-                            break;
-                        case 2:
-                            listar_vendas();
-                            break;
-                        case 3:
-                            remover_venda();
-                            break;
-                        default:
-                            break;
-                        }
-                        break;
-                    } while (op2 != 0); 
-                    break;
-                default:
+
                     break;
                 }
-            } while (op != 0);*/
-            break;
+            }while (op != 0);
+        break;
         case 0:
             printf("A sair...\n");
             guardar_categorias(categorias, num_categorias);
             guardar_produtos(iniciolista);
-            guardar_clientes();
+            guardar_clientes(iniciolistaclientes);
             break;
         default:
             break;
