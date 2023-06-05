@@ -130,7 +130,7 @@ int main()
                         case 2:
                             do
                             {
-                                op3 = menulistarpor();
+                                op3 = menulistarclientes();
                                 switch (op3)
                                 {
                                 case 1:
@@ -138,7 +138,7 @@ int main()
                                     listar_clientes(iniciolistaclientes);
                                     break;
                                 case 2:
-                                    procurar_cliente(iniciolistaclientes)
+                                    procurar_cliente(iniciolistaclientes);
                                     break;
                                 default:
                                     break;

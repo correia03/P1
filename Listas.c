@@ -649,9 +649,9 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
     scanf("%c", &anon);
     if (anon == 's')
     {
-        strcpy(nome, "anonimo");
+        strcpy(nome,"anonimo");
         nif = 999999999;
-        strcpy(endereco, "anonimo");
+        strcpy(endereco,"anonimo");
         telefone = 911111111;
     }
     else{
@@ -695,7 +695,7 @@ void listar_clientes(lista_clientes *iniciolistaclientes)
 
 }
 //funçao para ordenar a lista por ordem afabetica de  nome
-void ordenar_clientes(lista_clientes **iniciolistaclientes, lista_clientes **fimlistaclientes)
+void ordenar_clientes_alfabetica(lista_clientes **iniciolistaclientes, lista_clientes **fimlistaclientes)
 {
     lista_clientes *atual = *iniciolistaclientes;
     lista_clientes *seguinte = NULL;
