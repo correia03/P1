@@ -625,7 +625,8 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
     int nif;
     char endereco[100];
     int telefone;
-    lista_clientes *novo = calloc(1, sizeof(lista_clientes));
+    lista_clientes *novo = NULL;
+    novo = calloc(1, sizeof(lista_clientes));
     if (novo == NULL)
     {
         printf("Erro ao alocar memória!\n");
@@ -647,12 +648,17 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
     char anon;
     fflush(stdin);
     scanf("%c", &anon);
+    printf("%c", anon);
     if (anon == 's')
     {
         strcpy(nome,"anonimo");
         nif = 999999999;
         strcpy(endereco,"anonimo");
         telefone = 911111111;
+        strcpy(novo->clientes.nome, nome);
+        novo->clientes.nif = nif;
+        strcpy(novo->clientes.endereco, endereco);
+        novo->clientes.telefone = telefone;
     }
     else{
     strcpy(novo->clientes.nome, nome);
@@ -764,6 +770,7 @@ void remover_cliente(lista_clientes **iniciolista, lista_clientes **fimlista,int
     lista_clientes *atual = *iniciolista;
     while (atual != NULL)
     {
+        printf("%d",atual->clientes.nif);
         if (atual->clientes.nif == nif)
         {
             if (atual->anterior != NULL)
