@@ -158,6 +158,40 @@ int main()
                     } while (op2 != 0);
                     break;
                 case 2:
+                // menugerirvendas
+                    do
+                    {
+                        op2 = menugerirvendas();
+                        switch (op2)
+                        {
+                        case 1:
+                            int idcliente = -1;
+                            int idproduto = -1;
+                            idcliente = encontrar_id_cliente(iniciolista);
+                            if(idcliente == -1){
+                                printf("Cliente nao encontrado\n");
+                                break;
+                            }
+                            idproduto = encontrar_id_produto(iniciolista);
+                            if(idproduto == -1){
+                                printf("Produto nao encontrado\n");
+                                break;
+                            }
+                            
+                            break;
+                        case 2:
+                            listar_vendas(iniciolista_vendas);
+                            break;
+                        case 3:
+                            remover_venda(&iniciolista_vendas,&fimlista_vendas,&num_vendas);
+                            break;
+                        case 4:
+                            atualizar_venda(iniciolista_vendas,iniciolista,iniciolistaclientes);
+                            break;
+                        default:
+                            break;
+                        }
+                    } while (op2 != 0);
 
                     break;
                 }
