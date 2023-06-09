@@ -15,10 +15,11 @@ int main()
     lista_clientes *fimlistaclientes = NULL;
     int num_produtos = 0;
     int num_vendas, num_clientes = 0;
+    int id_cliente, id_produto = -1;
     categoria categorias[100];
     ler_categorias(categorias, &num_categorias);
     ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias);
-    ler_clientes(&iniciolistaclientes,&fimlistaclientes, &num_clientes);
+    ler_clientes(&iniciolistaclientes, &fimlistaclientes, &num_clientes);
     do
     {
         opcao = menu();
@@ -69,21 +70,21 @@ int main()
                             switch (op3)
                             {
                             case 1:
-                                ordenar_produtos_alfabetica(&iniciolista,&fimlista);
+                                ordenar_produtos_alfabetica(&iniciolista, &fimlista);
                                 listar_produtos(iniciolista);
-                                ordenar_produtos_ids(&iniciolista,&fimlista);
+                                ordenar_produtos_ids(&iniciolista, &fimlista);
                                 break;
                             case 2:
-                                ordenar_preco_desc(&iniciolista,&fimlista);
+                                ordenar_preco_desc(&iniciolista, &fimlista);
                                 listar_produtos(iniciolista);
-                                ordenar_produtos_ids(&iniciolista,&fimlista);
-                            break;
+                                ordenar_produtos_ids(&iniciolista, &fimlista);
+                                break;
                             default:
                                 break;
                             }
                             break;
                         case 3:
-                            remover_produto(&iniciolista,&fimlista,&num_clientes);
+                            remover_produto(&iniciolista, &fimlista, &num_clientes);
                             break;
                         case 4:
                             atualizar_produto(iniciolista, categorias, &num_categorias);
@@ -97,24 +98,25 @@ int main()
                         default:
                             break;
                         }
-                       
-                    } while (op2 != 0); 
+
+                    } while (op2 != 0);
                     break;
                 case 3:
-                 //listar categorias e produtos 
-                    listar_produtos_categoria(iniciolista,categorias,num_categorias);
+                    // listar categorias e produtos
+                    listar_produtos_categoria(iniciolista, categorias, num_categorias);
                     break;
                 case 4:
-                    //gerar relatorio dos produtos
-                    gerar_relatorio_produtos_categoria(iniciolista,categorias,num_categorias);
+                    // gerar relatorio dos produtos
+                    gerar_relatorio_produtos_categoria(iniciolista, categorias, num_categorias);
                 default:
                     break;
                 }
             } while (op != 0);
             break;
         case 2:
-        //menugerirVendaseClientes()
-            do{
+            // menugerirVendaseClientes()
+            do
+            {
                 op = menugerirVendaseClientes();
                 switch (op)
                 {
@@ -125,7 +127,7 @@ int main()
                         switch (op2)
                         {
                         case 1:
-                            adicionar_cliente(&iniciolistaclientes,&fimlistaclientes,&num_clientes);
+                            adicionar_cliente(&iniciolistaclientes, &fimlistaclientes, &num_clientes);
                             break;
                         case 2:
                             do
@@ -134,7 +136,7 @@ int main()
                                 switch (op3)
                                 {
                                 case 1:
-                                    ordenar_clientes_alfabetica(&iniciolistaclientes,&fimlistaclientes);
+                                    ordenar_clientes_alfabetica(&iniciolistaclientes, &fimlistaclientes);
                                     listar_clientes(iniciolistaclientes);
                                     break;
                                 case 2:
@@ -143,11 +145,11 @@ int main()
                                 default:
                                     break;
                                 }
-                                
-                            } while (op3 != 0 );
+
+                            } while (op3 != 0);
                             break;
                         case 3:
-                            remover_cliente(&iniciolistaclientes,&fimlistaclientes,&num_clientes);
+                            remover_cliente(&iniciolistaclientes, &fimlistaclientes, &num_clientes);
                             break;
                         case 4:
                             atualizar_cliente(iniciolistaclientes);
@@ -158,39 +160,59 @@ int main()
                     } while (op2 != 0);
                     break;
                 case 2:
-                // menugerirvendas
+                    // menugerirvendas
                     do
                     {
-                        op2 = menugerirvendas();
+                        op2 = menugerirVendas();
                         switch (op2)
                         {
                         case 1:
-                            int idcliente = -1;
-                            int idproduto = -1;
-                            idcliente = encontrar_id_cliente(iniciolista);
-                            if(idcliente == -1){
+                            id_cliente = encontrar_id_cliente(iniciolistaclientes);
+                            if (id_cliente == -1)
+                            {
                                 printf("Cliente nao encontrado\n");
                                 break;
                             }
-                            idproduto = encontrar_id_produto(iniciolista);
-                            if(idproduto == -1){
+                            id_produto = encontrar_id_produto(iniciolista);
+                            if (id_produto == -1)
+                            {
                                 printf("Produto nao encontrado\n");
                                 break;
                             }
                             int quantidade;
-                            printf("insira a quantidade a comprar: ");
-                            scanf("%d",&quantidade);
-                            
+                            int desconto;
+                            int verificacao;
+                            do
+                            {
+                                
+                                printf("insira a quantidade a comprar: ");
+                                scanf("%d", &quantidade);
+                                verificacao = verificar_quantidade(iniciolista, id_produto, quantidade);
+                                if (verificacao = 0)
+                                {
+                                    printf("Quantidade indisponivel ou sem stock\n");
+                                }
+                            } while (verificacao != 0) ;
+                            do
+                            {
+                                printf("insira o desconto: (0-100)");
+                                scanf("%d", &desconto);
+                            }
+                            while (desconto < 0 || desconto > 100)
+                                ;
+                            float precoproduto;
+                            precoproduto = encontrar_preco_produto(iniciolista, id_produto);
+                            adicionar_venda(&iniciolista_vendas, &fimlista_vendas, &num_vendas, iniciolista, id_cliente, id_produto, quantidade, desconto, precoproduto);
 
                             break;
                         case 2:
-                            listar_vendas(iniciolista_vendas);
+                            // listar_vendas(iniciolista_vendas);
                             break;
                         case 3:
-                            remover_venda(&iniciolista_vendas,&fimlista_vendas,&num_vendas);
+                            // remover_venda(&iniciolista_vendas,&fimlista_vendas,&num_vendas);
                             break;
                         case 4:
-                            atualizar_venda(iniciolista_vendas,iniciolista,iniciolistaclientes);
+                            // atualizar_venda(iniciolista_vendas,iniciolista,iniciolistaclientes);
                             break;
                         default:
                             break;
@@ -199,8 +221,8 @@ int main()
 
                     break;
                 }
-            }while (op != 0);
-        break;
+            } while (op != 0);
+            break;
         case 0:
             printf("A sair...\n");
             guardar_categorias(categorias, num_categorias);
