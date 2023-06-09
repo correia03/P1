@@ -1060,10 +1060,7 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     data.minuto = tm->tm_min;
 
     char adicionar; 
-    float desconto_aplicado; 
-    float precototal;        
-    desconto_aplicado  = (float)desconto/100;
-    precototal = (precoproduto * quantidade) - (precoproduto * quantidade * desconto_aplicado);
+
     do
     {
         lista_vendas *novo = NULL;
@@ -1074,7 +1071,10 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
             printf("Erro ao alocar memoria!\n");
             return;
         }
-
+        float desconto_aplicado; 
+        float precototal;        
+        desconto_aplicado  = (float)desconto/100;
+        precototal = (precoproduto * quantidade) - (precoproduto * quantidade * desconto_aplicado);
         novo->vendas.idcliente = idcliente;
         novo->vendas.data = data;
         novo->vendas.idproduto = idproduto;
