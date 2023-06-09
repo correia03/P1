@@ -358,6 +358,28 @@ int encontrar_id(lista *iniciolista)
     }
     return -1;
 }
+//verificicar quantidade
+int verificar_quantidade(lista *iniciolista, int quantidade,int idproduto)
+{
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        if (atual->produto.produto_numero == idproduto)
+        {
+            if (atual->produto.quantidade >= quantidade)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        atual = atual->proximo;
+
+    }
+    return -1;
+}
 
 //ordem descencente de preço
 void ordenar_preco_desc(lista** iniciolista, lista** fimlista)

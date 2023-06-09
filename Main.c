@@ -177,7 +177,11 @@ int main()
                                 printf("Produto nao encontrado\n");
                                 break;
                             }
+                            int quantidade;
+                            printf("insira a quantidade a comprar: ");
+                            scanf("%d",&quantidade);
                             
+
                             break;
                         case 2:
                             listar_vendas(iniciolista_vendas);
