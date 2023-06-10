@@ -763,6 +763,7 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
         strcpy(novo->clientes.endereco, endereco);
         novo->clientes.telefone = telefone;
     }
+    (*numclientes)++;
     novo->clientes.cliente_numero = *numclientes;
     novo->anterior = NULL;
     novo->proximo = NULL;
@@ -777,7 +778,6 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
         (*fimlistaclientes)->proximo = novo;
         *fimlistaclientes = novo;
     }
-    numclientes++;
 }
 // listar clientes
 void listar_clientes(lista_clientes *iniciolistaclientes)
@@ -785,11 +785,13 @@ void listar_clientes(lista_clientes *iniciolistaclientes)
     lista_clientes *atual = iniciolistaclientes;
     while (atual != NULL)
     {
+        printf("----------------------------------------------------\n");
         printf("Nome do cliente: %s\n", atual->clientes.nome);
         printf("NIF do cliente: %d\n", atual->clientes.nif);
         printf("Endereco do cliente: %s\n", atual->clientes.endereco);
         printf("Telefone do cliente: %d\n", atual->clientes.telefone);
         printf("Numero do cliente: %d\n", atual->clientes.cliente_numero);
+        printf("----------------------------------------------------\n");
         atual = atual->proximo;
     }
 }
@@ -809,6 +811,44 @@ void ordenar_clientes_alfabetica(lista_clientes **iniciolistaclientes, lista_cli
         {
             seguinte = atual->proximo;
             if (strcmp(atual->clientes.nome, seguinte->clientes.nome) > 0)
+            {
+                troca = 1;
+                if (anterior != NULL)
+                {
+                    anterior->proximo = seguinte;
+                }
+                else
+                {
+                    *iniciolistaclientes = seguinte;
+                }
+                atual->proximo = seguinte->proximo;
+                seguinte->proximo = atual;
+                aux = atual;
+                atual = seguinte;
+                seguinte = aux;
+            }
+            anterior = atual;
+            atual = atual->proximo;
+        }
+    } while (troca);
+    *fimlistaclientes = atual;
+}
+//ordenar clientes por id
+void ordenar_clientes_id(lista_clientes **iniciolistaclientes, lista_clientes **fimlistaclientes)
+{
+    lista_clientes *atual = *iniciolistaclientes;
+    lista_clientes *seguinte = NULL;
+    lista_clientes *anterior = NULL;
+    lista_clientes *aux = NULL;
+    int troca = 0;
+    do
+    {
+        troca = 0;
+        atual = *iniciolistaclientes;
+        while (atual->proximo != NULL)
+        {
+            seguinte = atual->proximo;
+            if (atual->clientes.cliente_numero > seguinte->clientes.cliente_numero)
             {
                 troca = 1;
                 if (anterior != NULL)
@@ -1047,7 +1087,7 @@ typedef struct lista_vendas
 #################################################################vendas###############################################################
 ######################################################################################################################################*/
 // adicionar venda e remover o stock ao produto que esta na lista dos produtos
-void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, lista *iniciolista, int idproduto, int idcliente, int quantidade, int desconto, float precoproduto)
+void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, int idproduto, int idcliente, int quantidade, int desconto, float precoproduto)
 {
     Data data;
 
@@ -1058,46 +1098,55 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     data.dia = tm->tm_mday;
     data.hora = tm->tm_hour;
     data.minuto = tm->tm_min;
-
-    char adicionar; 
-
-    do
+    lista_vendas *novo = NULL;
+    novo = (lista_vendas *)malloc(sizeof(lista_vendas));
+    // VERIFICAR SE FOI POSSIVEL ALOCAR MEMORIA
+    if (novo == NULL)
     {
-        lista_vendas *novo = NULL;
-        novo = (lista_vendas *)malloc(sizeof(lista_vendas));
-        // VERIFICAR SE FOI POSSIVEL ALOCAR MEMORIA
-        if (novo == NULL)
-        {
-            printf("Erro ao alocar memoria!\n");
-            return;
-        }
-        float desconto_aplicado; 
-        float precototal;        
-        desconto_aplicado  = (float)desconto/100;
-        precototal = (precoproduto * quantidade) - (precoproduto * quantidade * desconto_aplicado);
-        novo->vendas.idcliente = idcliente;
-        novo->vendas.data = data;
-        novo->vendas.idproduto = idproduto;
-        novo->vendas.desconto = desconto;
-        novo->vendas.quantidade_total = quantidade;
-        novo->vendas.preco_total = precototal;
-        novo->vendas.id = (*num_vendas);
-        novo->proximo = NULL;
-        novo->anterior = NULL;
-        if (*inicio_vendas == NULL)
-        {
-            *inicio_vendas = novo;
-            *fim_vendas = novo;
-        }
-        else
-        {
-            novo->anterior = *fim_vendas;
-            (*fim_vendas)->proximo = novo;
-            *fim_vendas = novo;
-        }
-        (*num_vendas)++;
-        printf("Deseja adicionar mais vendas? (s/n)");
-        scanf("%c", &adicionar);
-        fflush(stdin);
-    } while (adicionar == 's');
+        printf("Erro ao alocar memoria!\n");
+        return;
+    }
+    float desconto_aplicado; 
+    float precototal;        
+    desconto_aplicado  = (float)desconto/100;
+    precototal = (precoproduto * quantidade) - (precoproduto * desconto_aplicado * quantidade);
+    novo->vendas.idcliente = idcliente;
+    novo->vendas.data = data;
+    novo->vendas.idproduto = idproduto;
+    novo->vendas.desconto = desconto;
+    novo->vendas.quantidade_total = quantidade;
+    novo->vendas.preco_total = precototal;
+    novo->vendas.id = (*num_vendas);
+    novo->proximo = NULL;
+    novo->anterior = NULL;
+    if (*inicio_vendas == NULL)
+    {
+        *inicio_vendas = novo;
+        *fim_vendas = novo;
+    }
+    else
+    {
+        novo->anterior = *fim_vendas;
+        (*fim_vendas)->proximo = novo;
+        *fim_vendas = novo;
+    }
+    (*num_vendas)++;
+}
+// listar vendas
+void listar_vendas(lista_vendas *inicio_vendas)
+{
+    lista_vendas *atual = inicio_vendas;
+    while (atual != NULL)
+    {
+        printf("----------------------------------------------------------------------\n");
+        printf("ID da venda: %d\n", atual->vendas.id);
+        printf("ID do cliente: %d\n", atual->vendas.idcliente);
+        printf("Data da venda: %d/%d/%d %d:%d\n", atual->vendas.data.dia, atual->vendas.data.mes, atual->vendas.data.ano, atual->vendas.data.hora, atual->vendas.data.minuto);
+        printf("ID do produto: %d\n", atual->vendas.idproduto);
+        printf("Desconto: %f\n", atual->vendas.desconto);
+        printf("Quantidade total: %d\n", atual->vendas.quantidade_total);
+        printf("Preco total: %.2f\n", atual->vendas.preco_total);
+        printf("----------------------------------------------------------------------\n");
+        atual = atual->proximo;
+    }
 }

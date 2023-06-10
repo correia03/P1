@@ -138,6 +138,7 @@ int main()
                                 case 1:
                                     ordenar_clientes_alfabetica(&iniciolistaclientes, &fimlistaclientes);
                                     listar_clientes(iniciolistaclientes);
+                                    ordenar_clientes_id(&iniciolistaclientes,&fimlistaclientes);
                                     break;
                                 case 2:
                                     procurar_cliente(iniciolistaclientes);
@@ -188,7 +189,7 @@ int main()
                                 printf("insira a quantidade a comprar: ");
                                 scanf("%d", &quantidade);
                                 verificacao = verificar_quantidade(iniciolista, id_produto, quantidade);
-                                if (verificacao = 0)
+                                if (verificacao == 0)
                                 {
                                     printf("Quantidade indisponivel ou sem stock\n");
                                 }
@@ -202,11 +203,12 @@ int main()
                                 ;
                             float precoproduto;
                             precoproduto = encontrar_preco_produto(iniciolista, id_produto);
-                            adicionar_venda(&iniciolista_vendas, &fimlista_vendas, &num_vendas, iniciolista, id_cliente, id_produto, quantidade, desconto, precoproduto);
+                            adicionar_venda(&iniciolista_vendas, &fimlista_vendas, &num_vendas, id_cliente, id_produto, quantidade, desconto, precoproduto);
+                            retirar_quantidade(iniciolista,quantidade,id_produto);
 
                             break;
                         case 2:
-                            // listar_vendas(iniciolista_vendas);
+                            listar_vendas(iniciolista_vendas);
                             break;
                         case 3:
                             // remover_venda(&iniciolista_vendas,&fimlista_vendas,&num_vendas);

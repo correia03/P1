@@ -7,15 +7,13 @@ int menu() {
         printf("\t-----------------------------------------------------------\n");
         printf("\t1- Gerir Categorias e Produtos: \n");
         printf("\t2- Gerir clientes e vendas: \n");
-        printf("\t3- Criar Relatorio de stock do inventario: \n");
-        printf("\t4- Produto fora de Stock:\n");
         printf("\t0- Sair. \n");
         printf("\t-----------------------------------------------------------\n");
 
         printf("Escolha uma Opcao:");
         scanf("%d", &m);
 
-        if (m < 0 || m > 4) {
+        if (m < 0 || m > 2) {
             printf("Opcao invalida. Tente novamente.\n");
         }
     }
@@ -29,7 +27,7 @@ int menugerirCategoriaseProdutos() {
         printf("\t1- gerir Categoria\n");
         printf("\t2- gerir Produtos\n");
         printf("\t3- listar categorias e produtos associados\n");
-        printf("\t4- gerar relatorio de produtos");
+        printf("\t4- gerar relatorio de produtos\n");
         printf("\t0- Voltar\n");
         printf("\t-----------------------------------------------------------\n");
 
