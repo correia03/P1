@@ -119,6 +119,11 @@ void ler_categorias(categoria *categorias, int *num_categorias)
 // função para adicionar produtos e ler o input
 void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos, categoria *categorias, int *num_categorias)
 {
+    int count = contar_produtos(iniciolista);
+    if(count== 250){
+        printf("Nao pode adicionar mais produtos!\n");
+        return;
+    }
     lista *novo = NULL;
     novo = calloc(1, sizeof(lista));
     if (novo == NULL)
@@ -191,6 +196,18 @@ void adicionar_produto(lista **iniciolista, lista **fimlista, int *num_produtos,
         (*fimlista)->proximo = novo;
         *fimlista = novo;
     }
+}
+//contar o numero total de produtos 
+int contar_produtos(lista *iniciolista)
+{
+    int count = 0;
+    lista *atual = iniciolista;
+    while (atual != NULL)
+    {
+        count++;
+        atual = atual->proximo;
+    }
+    return count;
 }
 // função para listar produtos
 void listar_produtos(lista *iniciolista)
@@ -662,7 +679,6 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
             fclose(ficheiro);
             return;
         }
-        printf("4");
         if (fscanf(ficheiro, "marca/nome:%s preco do produto:%f sku:%s quantidade em stock:%d categoria:%s identificador da categoria:%s id do produto:%d\n",
                    p.nome, &(p.preco), p.sku, &(p.quantidade),
                    p.categoria->nome, p.categoria->identificador, &(p.produto_numero)) != 7)
@@ -672,9 +688,7 @@ void ler_produtos(lista **iniciolista, lista **fimlista, int *num_produtos, cate
             break; // Exit the loop if fscanf fails to read all values
         }
         novo->produto = p;
-        printf("\n%i \n", novo->produto.produto_numero);
         (*num_produtos) = novo->produto.produto_numero;
-        printf("numero produtos %d\n", *num_produtos);
         novo->anterior = NULL;
         novo->proximo = NULL;
 
@@ -731,8 +745,10 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
     printf("Nome do cliente: ");
     scanf("%s", nome);
     fflush(stdin);
+    do{
     printf("NIF do cliente: ");
     scanf("%d", &nif);
+    }while(verificar_nif(iniciolistaclientes,nif));
     fflush(stdin);
     printf("Endereco do cliente: (neste formato: rua_nomerua) ");
     scanf("%s", endereco);
@@ -778,6 +794,20 @@ void adicionar_cliente(lista_clientes **iniciolistaclientes, lista_clientes **fi
         (*fimlistaclientes)->proximo = novo;
         *fimlistaclientes = novo;
     }
+}
+//verificar nif
+int verificar_nif(lista_clientes *iniciolistaclientes, int nif)
+{
+    lista_clientes *atual = iniciolistaclientes;
+    while (atual != NULL)
+    {
+        if (atual->clientes.nif == nif)
+        {
+            return 1;
+        }
+        atual = atual->proximo;
+    }
+    return 0;
 }
 // listar clientes
 void listar_clientes(lista_clientes *iniciolistaclientes)
@@ -914,14 +944,13 @@ void procurar_cliente(lista_clientes *iniciolista)
 // remover cliente
 void remover_cliente(lista_clientes **iniciolista, lista_clientes **fimlista, int *num_clientes)
 {
-    int nif;
-    printf("NIF do cliente: ");
-    scanf("%d", &nif);
+    int id;
+    printf("id do cliente a remover ");
+    scanf("%d", &id);
     lista_clientes *atual = *iniciolista;
     while (atual != NULL)
     {
-        printf("%d", atual->clientes.nif);
-        if (atual->clientes.nif == nif)
+        if (atual->clientes.cliente_numero == id)
         {
             if (atual->anterior != NULL)
             {
@@ -939,8 +968,6 @@ void remover_cliente(lista_clientes **iniciolista, lista_clientes **fimlista, in
             {
                 *fimlista = atual->anterior;
             }
-            // retirar do numero total de clientes
-            (*num_clientes)--;
             free(atual);
             return;
         }
@@ -948,7 +975,7 @@ void remover_cliente(lista_clientes **iniciolista, lista_clientes **fimlista, in
     }
     printf("Cliente nao encontrado!\n");
 }
-// alterar cliente (rever ainda nao completo)
+// alterar cliente 
 void atualizar_cliente(lista_clientes *iniciolista)
 {
     int nif;
@@ -1147,6 +1174,145 @@ void listar_vendas(lista_vendas *inicio_vendas)
         printf("Quantidade total: %d\n", atual->vendas.quantidade_total);
         printf("Preco total: %.2f\n", atual->vendas.preco_total);
         printf("----------------------------------------------------------------------\n");
+        atual = atual->proximo;
+    }
+}
+//Listar todas as vendas de hoje por hora ascendente
+void listar_vendas_hoje(lista_vendas *inicio_vendas)
+{
+
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int dia = tm->tm_mday;
+    int mes = tm->tm_mon + 1;
+    int ano = tm->tm_year + 1900;
+    lista_vendas *atual = inicio_vendas;
+    while (atual != NULL)
+    {
+        if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+        {
+            printf("----------------------------------------------------------------------\n");
+            printf("ID da venda: %d\n", atual->vendas.id);
+            printf("ID do cliente: %d\n", atual->vendas.idcliente);
+            printf("Data da venda: %d/%d/%d %d:%d\n", atual->vendas.data.dia, atual->vendas.data.mes, atual->vendas.data.ano, atual->vendas.data.hora, atual->vendas.data.minuto);
+            printf("ID do produto: %d\n", atual->vendas.idproduto);
+            printf("Desconto: %f\n", atual->vendas.desconto);
+            printf("Quantidade total: %d\n", atual->vendas.quantidade_total);
+            printf("Preco total: %.2f\n", atual->vendas.preco_total);
+            printf("----------------------------------------------------------------------\n");
+        }
+        atual = atual->proximo;
+    }
+}
+//Listar todas as vendas  de determinado dia por hora ascendente.
+void listar_vendas_dia(lista_vendas *inicio_vendas)
+{
+    int dia;
+    int mes;
+    int ano;
+    printf("Insira o dia: ");
+    scanf("%d", &dia);
+    printf("Insira o mes: ");
+    scanf("%d", &mes);
+    printf("Insira o ano: ");
+    scanf("%d", &ano);
+    lista_vendas *atual = inicio_vendas;
+    while (atual != NULL)
+    {
+        if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+        {
+            printf("----------------------------------------------------------------------\n");
+            printf("ID da venda: %d\n", atual->vendas.id);
+            printf("ID do cliente: %d\n", atual->vendas.idcliente);
+            printf("Data da venda: %d/%d/%d %d:%d\n", atual->vendas.data.dia, atual->vendas.data.mes, atual->vendas.data.ano, atual->vendas.data.hora, atual->vendas.data.minuto);
+            printf("ID do produto: %d\n", atual->vendas.idproduto);
+            printf("Desconto: %f\n", atual->vendas.desconto);
+            printf("Quantidade total: %d\n", atual->vendas.quantidade_total);
+            printf("Preco total: %.2f\n", atual->vendas.preco_total);
+            printf("----------------------------------------------------------------------\n");
+        }
+        atual = atual->proximo;
+    }
+}
+//Listar todos produtos que mais se venderam hoje
+void listar_produtos_mais_vendidos(lista_vendas *inicio_vendas, lista *inicio_produtos)
+{
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int dia = tm->tm_mday;
+    int mes = tm->tm_mon + 1;
+    int ano = tm->tm_year + 1900;
+    lista_vendas *atual = inicio_vendas;
+    lista *atual_produtos = inicio_produtos;
+    int idproduto;
+    while (atual != NULL)
+    {
+        if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+        {
+            idproduto = atual->vendas.idproduto;
+            while (atual_produtos != NULL)
+            {
+                if (atual_produtos->produto.produto_numero == idproduto)
+                {
+                    int contador_vezes = 0;
+                    if(contador_vezes > 2){
+                    printf("\t-----------------------------------------------------------\n");
+                    printf("Nome: %s\n", atual_produtos->produto.nome);
+                    printf("Preco: %.2f\n", atual_produtos->produto.preco);
+                    printf("SKU: %s\n", atual_produtos->produto.sku);
+                    printf("Quantidade em stock: %d\n", atual_produtos->produto.quantidade);
+                    printf("Categoria: %s\n", atual_produtos->produto.categoria->nome);
+                    printf("Identificador da categoria: %s\n", atual_produtos->produto.categoria->identificador);
+                    printf("Numero do produto: %d\n", atual_produtos->produto.produto_numero);
+                    printf("\t-----------------------------------------------------------\n");
+                    }
+                }
+                atual_produtos = atual_produtos->proximo;
+            }
+        }
+        atual = atual->proximo;
+    }
+}
+//Listar todos produtos que mais se venderam um determinado dia
+void listar_produtos_mais_vendidos_dia(lista_vendas *inicio_vendas, lista *inicio_produtos)
+{
+    int dia;
+    int mes;
+    int ano;
+    printf("Insira o dia: ");
+    scanf("%d", &dia);
+    printf("Insira o mes: ");
+    scanf("%d", &mes);
+    printf("Insira o ano: ");
+    scanf("%d", &ano);
+    lista_vendas *atual = inicio_vendas;
+    lista *atual_produtos = inicio_produtos;
+    int idproduto;
+    while (atual != NULL)
+    {
+        if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+        {
+            idproduto = atual->vendas.idproduto;
+            while (atual_produtos != NULL)
+            {
+                if (atual_produtos->produto.produto_numero == idproduto)
+                {
+                    int contador_vezes = 0;
+                    if(contador_vezes > 2){
+                    printf("\t-----------------------------------------------------------\n");
+                    printf("Nome: %s\n", atual_produtos->produto.nome);
+                    printf("Preco: %.2f\n", atual_produtos->produto.preco);
+                    printf("SKU: %s\n", atual_produtos->produto.sku);
+                    printf("Quantidade em stock: %d\n", atual_produtos->produto.quantidade);
+                    printf("Categoria: %s\n", atual_produtos->produto.categoria->nome);
+                    printf("Identificador da categoria: %s\n", atual_produtos->produto.categoria->identificador);
+                    printf("Numero do produto: %d\n", atual_produtos->produto.produto_numero);
+                    printf("\t-----------------------------------------------------------\n");
+                    }
+                }
+                atual_produtos = atual_produtos->proximo;
+            }
+        }
         atual = atual->proximo;
     }
 }
