@@ -133,7 +133,7 @@ int menugerirVendas(){
         printf("\t-----------------------------------------------------------\n");
         printf("\t1- Adicionar Venda\n");
         printf("\t2- Listar Vendas\n");
-        printf("\t3- Remover Venda\n");
+        printf("\t3- gerar um relatorio com produtos com pouco stock e quantidade vendida\n");
         printf("\t0- Voltar\n");
         printf("\t-----------------------------------------------------------\n");
 
@@ -195,19 +195,23 @@ int menulistarvendas(){
         printf("\t1- Listar todas as vendas\n");
         printf("\t2- Listar vendas de Hoje\n");
         printf("\t3- Listar vendas de um determinado dia\n");
-        printf("\t4- Listar vendas de um determinado intervalo de tempo\n");
-        printf("\t5- Listar vendas de um determinado intervalo de tempo de um determinado cliente\n");
-        printf("\t6- Listar vendas de um determinado intervalo de tempo de um determinado produto\n");
-        printf("\t7- Listar vendas de um determinado intervalo de tempo de um determinado cliente e produto\n");
+        printf("\t4- Listar produtos mais vendidos de hoje\n");
+        printf("\t5- Listar produtos mais vendidos de um determinado dia\n");
+        printf("\t6- Listar todas as vendas de hoje de uma categoria de produto\n");
+        printf("\t7- Listar todas as vendas de um dia de uma categoria de produto\n");
+        printf("\t8- Saber quais os produtos que geraram mais receita hoje\n");
+        printf("\t9- Saber quais os produtos que geraram mais receita neste mes\n");
+        printf("\t10- Saber, por tipo de produto, quanto se vendeu hoje\n");
+        printf("\t11- Saber, por tipo de produto, quanto se vendeu neste mes\n");
         printf("\t0- Voltar\n");
         printf("\t-----------------------------------------------------------\n");  
         printf("Escolha uma Opcao: ");
         scanf("%d", &op);
 
-        if (op < 0 || op > 7) {
+        if (op < 0 || op > 11) {
             printf("Opcao invalida. Tente novamente.\n");
         }
-    } while (op < 0 || op > 7);
+    } while (op < 0 || op > 11);
 
     return op;
 }

@@ -1,0 +1,5 @@
+Nome do produto: msi
+Número do produto: 0
+Quantidade em estoque: 4
+Quantidade vendida no último mês: 6
+

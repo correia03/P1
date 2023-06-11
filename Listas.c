@@ -1114,7 +1114,7 @@ typedef struct lista_vendas
 #################################################################vendas###############################################################
 ######################################################################################################################################*/
 // adicionar venda e remover o stock ao produto que esta na lista dos produtos
-void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, int idproduto, int idcliente, int quantidade, int desconto, float precoproduto)
+void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, int *num_vendas, int idcliente,int idproduto,  int quantidade, int desconto, float precoproduto)
 {
     Data data;
 
@@ -1143,6 +1143,7 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
     novo->vendas.desconto = desconto;
     novo->vendas.quantidade_total = quantidade;
     novo->vendas.preco_total = precototal;
+    (*num_vendas)++;
     novo->vendas.id = (*num_vendas);
     novo->proximo = NULL;
     novo->anterior = NULL;
@@ -1157,7 +1158,6 @@ void adicionar_venda(lista_vendas **inicio_vendas, lista_vendas **fim_vendas, in
         (*fim_vendas)->proximo = novo;
         *fim_vendas = novo;
     }
-    (*num_vendas)++;
 }
 // listar vendas
 void listar_vendas(lista_vendas *inicio_vendas)
@@ -1235,7 +1235,7 @@ void listar_vendas_dia(lista_vendas *inicio_vendas)
     }
 }
 //Listar todos produtos que mais se venderam hoje
-void listar_produtos_mais_vendidos(lista_vendas *inicio_vendas, lista *inicio_produtos)
+void listar_produtos_mais_vendidos_hoje(lista_vendas *inicio_vendas, lista *inicio_produtos)
 {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
@@ -1244,33 +1244,37 @@ void listar_produtos_mais_vendidos(lista_vendas *inicio_vendas, lista *inicio_pr
     int ano = tm->tm_year + 1900;
     lista_vendas *atual = inicio_vendas;
     lista *atual_produtos = inicio_produtos;
-    int idproduto;
-    while (atual != NULL)
+    while (atual_produtos != NULL)
     {
-        if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+        int contador_vezes = 0;
+        atual = inicio_vendas; // Reiniciar o ponteiro para o início da lista de vendas
+
+        while (atual != NULL)
         {
-            idproduto = atual->vendas.idproduto;
-            while (atual_produtos != NULL)
+            if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
             {
-                if (atual_produtos->produto.produto_numero == idproduto)
+                if (atual->vendas.idproduto == atual_produtos->produto.produto_numero)
                 {
-                    int contador_vezes = 0;
-                    if(contador_vezes > 2){
-                    printf("\t-----------------------------------------------------------\n");
-                    printf("Nome: %s\n", atual_produtos->produto.nome);
-                    printf("Preco: %.2f\n", atual_produtos->produto.preco);
-                    printf("SKU: %s\n", atual_produtos->produto.sku);
-                    printf("Quantidade em stock: %d\n", atual_produtos->produto.quantidade);
-                    printf("Categoria: %s\n", atual_produtos->produto.categoria->nome);
-                    printf("Identificador da categoria: %s\n", atual_produtos->produto.categoria->identificador);
-                    printf("Numero do produto: %d\n", atual_produtos->produto.produto_numero);
-                    printf("\t-----------------------------------------------------------\n");
-                    }
+                    contador_vezes++;
                 }
-                atual_produtos = atual_produtos->proximo;
             }
+            atual = atual->proximo;
         }
-        atual = atual->proximo;
+        
+        if (contador_vezes > 2)
+        {
+            printf("\t-----------------------------------------------------------\n");
+            printf("Nome: %s\n", atual_produtos->produto.nome);
+            printf("Preco: %.2f\n", atual_produtos->produto.preco);
+            printf("SKU: %s\n", atual_produtos->produto.sku);
+            printf("Quantidade em stock: %d\n", atual_produtos->produto.quantidade);
+            printf("Categoria: %s\n", atual_produtos->produto.categoria->nome);
+            printf("Identificador da categoria: %s\n", atual_produtos->produto.categoria->identificador);
+            printf("Numero do produto: %d\n", atual_produtos->produto.produto_numero);
+            printf("\t-----------------------------------------------------------\n");
+        }
+        
+        atual_produtos = atual_produtos->proximo;
     }
 }
 //Listar todos produtos que mais se venderam um determinado dia
@@ -1287,32 +1291,462 @@ void listar_produtos_mais_vendidos_dia(lista_vendas *inicio_vendas, lista *inici
     scanf("%d", &ano);
     lista_vendas *atual = inicio_vendas;
     lista *atual_produtos = inicio_produtos;
-    int idproduto;
-    while (atual != NULL)
+    while (atual_produtos != NULL)
     {
-        if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+        int contador_vezes = 0;
+        atual = inicio_vendas; // Reiniciar o ponteiro para o início da lista de vendas
+
+        while (atual != NULL)
         {
-            idproduto = atual->vendas.idproduto;
-            while (atual_produtos != NULL)
+            if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
             {
-                if (atual_produtos->produto.produto_numero == idproduto)
+                if (atual->vendas.idproduto == atual_produtos->produto.produto_numero)
                 {
-                    int contador_vezes = 0;
-                    if(contador_vezes > 2){
-                    printf("\t-----------------------------------------------------------\n");
-                    printf("Nome: %s\n", atual_produtos->produto.nome);
-                    printf("Preco: %.2f\n", atual_produtos->produto.preco);
-                    printf("SKU: %s\n", atual_produtos->produto.sku);
-                    printf("Quantidade em stock: %d\n", atual_produtos->produto.quantidade);
-                    printf("Categoria: %s\n", atual_produtos->produto.categoria->nome);
-                    printf("Identificador da categoria: %s\n", atual_produtos->produto.categoria->identificador);
-                    printf("Numero do produto: %d\n", atual_produtos->produto.produto_numero);
-                    printf("\t-----------------------------------------------------------\n");
-                    }
+                    contador_vezes++;
                 }
-                atual_produtos = atual_produtos->proximo;
             }
+            atual = atual->proximo;
         }
-        atual = atual->proximo;
+        
+        if (contador_vezes > 2)
+        {
+            printf("\t-----------------------------------------------------------\n");
+            printf("Nome: %s\n", atual_produtos->produto.nome);
+            printf("Preco: %.2f\n", atual_produtos->produto.preco);
+            printf("SKU: %s\n", atual_produtos->produto.sku);
+            printf("Quantidade em stock: %d\n", atual_produtos->produto.quantidade);
+            printf("Categoria: %s\n", atual_produtos->produto.categoria->nome);
+            printf("Identificador da categoria: %s\n", atual_produtos->produto.categoria->identificador);
+            printf("Numero do produto: %d\n", atual_produtos->produto.produto_numero);
+            printf("\t-----------------------------------------------------------\n");
+        }
+        
+        atual_produtos = atual_produtos->proximo;
     }
 }
+//Listar todas as vendas de hoje de uma categoria de produto percorrer as categorias as vendas e os produtos e verificar
+void listar_vendas_hoje_categoria(lista_vendas *inicio_vendas, lista *inicio_produtos, categoria *categorias, int num_categorias)
+{
+     time_t t = time(NULL);
+     struct tm *tm = localtime(&t);
+     int dia = tm->tm_mday;
+     int mes = tm->tm_mon + 1;
+     int ano = tm->tm_year + 1900;
+     lista_vendas *atual = inicio_vendas;
+     lista *atual_produtos = inicio_produtos;
+     int idproduto;
+     char nome_categoria[100];
+     //listar categorias
+        for (int i = 0; i < num_categorias; i++)
+        {
+            printf("Categoria: %s\n", categorias[i].nome);
+        }
+     printf("Insira o nome da categoria a procurar as vendas: "); 
+     scanf("%s", nome_categoria);
+     for (int i = 0; i < num_categorias; i++)
+    {
+    if(stricmp(categorias[i].nome,nome_categoria) == 0){
+    printf("Categoria: %s\n", categorias[i].nome);
+     while (atual != NULL)
+     {
+          if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+          {
+                idproduto = atual->vendas.idproduto;
+                while (atual_produtos != NULL)
+                {
+                 if (atual_produtos->produto.produto_numero == idproduto )
+                 {
+                    if(stricmp(categorias[i].identificador, atual_produtos->produto.categoria->identificador) == 0 ){
+                    printf("----------------------------------------------------------------------\n");
+                    printf("ID da venda: %d\n", atual->vendas.id);
+                    printf("ID do cliente: %d\n", atual->vendas.idcliente);
+                    printf("Data da venda: %d/%d/%d %d:%d\n", atual->vendas.data.dia, atual->vendas.data.mes, atual->vendas.data.ano, atual->vendas.data.hora, atual->vendas.data.minuto);
+                    printf("ID do produto: %d\n", atual->vendas.idproduto);
+                    printf("Desconto: %f\n", atual->vendas.desconto);
+                    printf("Quantidade total: %d\n", atual->vendas.quantidade_total);
+                    printf("Preco total: %.2f\n", atual->vendas.preco_total);
+                    printf("----------------------------------------------------------------------\n");
+                      }
+                 }
+                 atual_produtos = atual_produtos->proximo;
+                }
+          }
+          atual = atual->proximo;
+      }
+     }
+    }
+}
+//Listar todas as vendas de um dia de uma categoria de produto percorrer as categorias as vendas e os produtos 
+void listar_vendas_dia_categoria(lista_vendas *inicio_vendas, lista *inicio_produtos, categoria *categorias, int num_categorias)
+{
+     int dia;
+     int mes;
+     int ano;
+     printf("Insira o dia: ");
+     scanf("%d", &dia);
+     printf("Insira o mes: ");
+     scanf("%d", &mes);
+     printf("Insira o ano: ");
+     scanf("%d", &ano);
+     lista_vendas *atual = inicio_vendas;
+     lista *atual_produtos = inicio_produtos;
+     int idproduto;
+     char nome_categoria[100];
+     //listar categorias
+        for (int i = 0; i < num_categorias; i++)
+        {
+            printf("Categoria: %s\n", categorias[i].nome);
+        }
+     printf("Insira o nome da categoria a procurar as vendas: "); 
+     scanf("%s", nome_categoria);
+     for (int i = 0; i < num_categorias; i++)
+    {
+    if(stricmp(categorias[i].nome,nome_categoria) == 0){
+    printf("Categoria: %s\n", categorias[i].nome);
+     while (atual != NULL)
+     {
+          if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+          {
+                idproduto = atual->vendas.idproduto;
+                while (atual_produtos != NULL)
+                {
+                 if (atual_produtos->produto.produto_numero == idproduto )
+                 {
+                    if(stricmp(categorias[i].identificador, atual_produtos->produto.categoria->identificador) == 0 ){
+                    printf("----------------------------------------------------------------------\n");
+                    printf("ID da venda: %d\n", atual->vendas.id);
+                    printf("ID do cliente: %d\n", atual->vendas.idcliente);
+                    printf("Data da venda: %d/%d/%d %d:%d\n", atual->vendas.data.dia, atual->vendas.data.mes, atual->vendas.data.ano, atual->vendas.data.hora, atual->vendas.data.minuto);
+                    printf("ID do produto: %d\n", atual->vendas.idproduto);
+                    printf("Desconto: %f\n", atual->vendas.desconto);
+                    printf("Quantidade total: %d\n", atual->vendas.quantidade_total);
+                    printf("Preco total: %.2f\n", atual->vendas.preco_total);
+                    printf("----------------------------------------------------------------------\n");
+                      }
+                 }
+                 atual_produtos = atual_produtos->proximo;
+                }
+          }
+          atual = atual->proximo;
+      }
+     }
+    }
+}
+// Saber quais os produtos que geraram mais receita hoje>1000
+void listar_produtos_mais_receita_hoje(lista_vendas *inicio_vendas, lista *inicio_produtos)
+{
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int dia = tm->tm_mday;
+    int mes = tm->tm_mon + 1;
+    int ano = tm->tm_year + 1900;
+    lista_vendas *atual = inicio_vendas;
+    lista *atual_produtos = inicio_produtos;
+    int idproduto;
+    float receitamax = -99;
+    float receita = 0;
+    char nome_produto[100];
+    int numero_produto = 0;
+    // Abrir a lista dos produtos
+    while (atual_produtos != NULL)
+    {
+        idproduto = atual_produtos->produto.produto_numero;
+        atual = inicio_vendas;
+        receita = 0;
+        while (atual != NULL)
+        {
+            if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+            {
+                if (atual->vendas.idproduto == idproduto)
+                {
+                    receita = receita + atual->vendas.preco_total;
+                }
+            }
+            atual = atual->proximo;
+        }
+        if (receita > receitamax)
+        {
+            receitamax = receita;
+            strcpy(nome_produto, atual_produtos->produto.nome);
+            numero_produto = atual_produtos->produto.produto_numero;
+        }
+        atual_produtos = atual_produtos->proximo;
+    }
+
+    if (receitamax > 1000)
+    {
+        printf("Nome do produto: %s\n", nome_produto);
+        printf("Número do produto: %d\n", numero_produto);
+        printf("Receita máxima: %.2f\n", receitamax);
+    }
+    else
+    {
+        printf("Nenhum produto encontrado com receita hoje.\n");
+    }
+}
+
+// Saber quais os produtos que geraram mais receita este mês>1000
+void listar_produtos_mais_receita_mes(lista_vendas *inicio_vendas, lista *inicio_produtos)
+{
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int mes = tm->tm_mon + 1;
+    int ano = tm->tm_year + 1900;
+    lista_vendas *atual = inicio_vendas;
+    lista *atual_produtos = inicio_produtos;
+    int idproduto;
+    float receitamax = -99;
+    float receita = 0;
+    char nome_produto[100];
+    int numero_produto = 0;
+    // Abrir a lista dos produtos
+    while (atual_produtos != NULL)
+    {
+        idproduto = atual_produtos->produto.produto_numero;
+        atual = inicio_vendas;
+        receita = 0;
+        while (atual != NULL)
+        {
+            if (atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+            {
+                if (atual->vendas.idproduto == idproduto)
+                {
+                    receita = receita + atual->vendas.preco_total;
+                }
+            }
+            atual = atual->proximo;
+        }
+        if (receita > receitamax)
+        {
+            receitamax = receita;
+            strcpy(nome_produto, atual_produtos->produto.nome);
+            numero_produto = atual_produtos->produto.produto_numero;
+        }
+        atual_produtos = atual_produtos->proximo;
+    }
+
+    if (receitamax > 1000)
+    {
+        printf("Nome do produto: %s\n", nome_produto);
+        printf("Número do produto: %d\n", numero_produto);
+        printf("Receita máxima: %.2f\n", receitamax);
+    }
+    else
+    {
+        printf("Nenhum produto encontrado com receita hoje.\n");
+    }
+}
+// guardar vendas e free da memoria
+void guardar_vendas(lista_vendas *inicio_vendas) {
+    FILE *arquivo;
+    lista_vendas *atual = inicio_vendas;
+
+    arquivo = fopen("vendas.txt", "w");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    while (atual != NULL) {
+        fprintf(arquivo, "idcliente: %d\n", atual->vendas.idcliente);
+        fprintf(arquivo, "data: %d/%d/%d\n", atual->vendas.data.dia, atual->vendas.data.mes, atual->vendas.data.ano);
+        fprintf(arquivo, "idproduto: %d\n", atual->vendas.idproduto);
+        fprintf(arquivo, "desconto: %.2f\n", atual->vendas.desconto);
+        fprintf(arquivo, "quantidade_total: %d\n", atual->vendas.quantidade_total);
+        fprintf(arquivo, "preco_total: %.2f\n", atual->vendas.preco_total);
+        fprintf(arquivo, "id: %d\n", atual->vendas.id);
+        fprintf(arquivo, "\n");
+
+        lista_vendas *temp = atual;
+        atual = atual->proximo;
+        free(temp);
+    }
+
+    fclose(arquivo);
+}
+
+// ler vendas 
+void ler_vendas(lista_vendas **inicio_vendas, lista_vendas **fimlista_vendas, int *num_vendas){
+    FILE *arquivo;
+    lista_vendas *novo;
+    lista_vendas *atual = *inicio_vendas;
+    int idcliente;
+    int dia;
+    int mes;
+    int ano;
+    int idproduto;
+    float desconto;
+    int quantidade_total;
+    float preco_total;
+    int id;
+    int i = 0;
+
+    arquivo = fopen("vendas.txt", "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    while (fscanf(arquivo, "idcliente: %d\n", &idcliente) != EOF) {
+        fscanf(arquivo, "data: %d/%d/%d\n", &dia, &mes, &ano);
+        fscanf(arquivo, "idproduto: %d\n", &idproduto);
+        fscanf(arquivo, "desconto: %f\n", &desconto);
+        fscanf(arquivo, "quantidade_total: %d\n", &quantidade_total);
+        fscanf(arquivo, "preco_total: %f\n", &preco_total);
+        fscanf(arquivo, "id: %d\n", &id);
+        fscanf(arquivo, "\n");
+
+        novo = (lista_vendas *) malloc(sizeof(lista_vendas));
+        novo->vendas.idcliente = idcliente;
+        novo->vendas.data.dia = dia;
+        novo->vendas.data.mes = mes;
+        novo->vendas.data.ano = ano;
+        novo->vendas.idproduto = idproduto;
+        novo->vendas.desconto = desconto;
+        novo->vendas.quantidade_total = quantidade_total;
+        novo->vendas.preco_total = preco_total;
+        novo->vendas.id = id;
+        novo->proximo = NULL;
+
+        if (*inicio_vendas == NULL) {
+            *inicio_vendas = novo;
+            *fimlista_vendas = novo;
+        } else {
+            (*fimlista_vendas)->proximo = novo;
+            *fimlista_vendas = novo;
+        }
+    }
+
+    *num_vendas = novo->vendas.id;
+
+    fclose(arquivo);
+}
+
+
+
+//Saber, por tipo de produto, quanto se vendeu hoje
+void listar_vendas_hoje_tipo(lista_vendas *inicio_vendas, lista *inicio_produtos)
+{
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int dia = tm->tm_mday;
+    int mes = tm->tm_mon + 1;
+    int ano = tm->tm_year + 1900;
+    lista_vendas *atual = inicio_vendas;
+    lista *atual_produtos = inicio_produtos;
+    int idproduto;
+    int quantidade = 0;
+    char nome_produto[100];
+    int numero_produto = 0;
+    // Abrir a lista dos produtos
+    while (atual_produtos != NULL)
+    {
+        idproduto = atual_produtos->produto.produto_numero;
+        atual = inicio_vendas;
+        quantidade = 0;
+        while (atual != NULL)
+        {
+            if (atual->vendas.data.dia == dia && atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+            {
+                if (atual->vendas.idproduto == idproduto)
+                {
+                    quantidade = quantidade + atual->vendas.quantidade_total;
+                }
+            }
+            atual = atual->proximo;
+        }
+        if (quantidade > 0)
+        {
+            printf("Nome do produto: %s\n", atual_produtos->produto.nome);
+            printf("Número do produto: %d\n", atual_produtos->produto.produto_numero);
+            printf("Quantidade vendida: %d\n", quantidade);
+        }
+        atual_produtos = atual_produtos->proximo;
+    }
+}  
+void listar_vendas_mes_tipo(lista_vendas *inicio_vendas, lista *inicio_produtos){
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int mes = tm->tm_mon + 1;
+    int ano = tm->tm_year + 1900;
+    lista_vendas *atual = inicio_vendas;
+    lista *atual_produtos = inicio_produtos;
+    int idproduto;
+    int quantidade = 0;
+    char nome_produto[100];
+    int numero_produto = 0;
+    // Abrir a lista dos produtos
+    while (atual_produtos != NULL)
+    {
+        idproduto = atual_produtos->produto.produto_numero;
+        atual = inicio_vendas;
+        quantidade = 0;
+        while (atual != NULL)
+        {
+            if (atual->vendas.data.mes == mes && atual->vendas.data.ano == ano)
+            {
+                if (atual->vendas.idproduto == idproduto)
+                {
+                    quantidade = quantidade + atual->vendas.quantidade_total;
+                }
+            }
+            atual = atual->proximo;
+        }
+        if (quantidade > 0)
+        {
+            printf("Nome do produto: %s\n", atual_produtos->produto.nome);
+            printf("Número do produto: %d\n", atual_produtos->produto.produto_numero);
+            printf("Quantidade vendida: %d\n", quantidade);
+        }
+        atual_produtos = atual_produtos->proximo;
+    }
+}
+//Apresentar e gerar um relatório dos produtos com pouco stock (menos de 5 unidades) e a quantidade de unidades destes produtos vendida no último mês.
+void gerar_relatorio_produtos_pouco_stock(lista *inicio_produtos, lista_vendas *inicio_vendas) {
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int mes = tm->tm_mon + 1;
+    int ano = tm->tm_year + 1900;
+    lista *atual = inicio_produtos;
+    lista_vendas *atual_vendas = inicio_vendas;
+    int quantidade_vendida;
+    FILE *arquivo;
+
+    arquivo = fopen("relatorio_pouco_stock.txt", "w");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    while (atual != NULL) {
+        printf("Nome do produto: %s\n", atual->produto.nome);
+        printf("Número do produto: %d\n", atual->produto.produto_numero);
+        printf("Quantidade em estoque: %d\n", atual->produto.quantidade);
+
+        if (atual->produto.quantidade < 5) {
+            atual_vendas = inicio_vendas;
+            quantidade_vendida = 0;
+
+            while (atual_vendas != NULL) {
+                // Se o id for igual ao produto e a data estiver neste mês, soma as quantidades do produto vendido
+                if (atual_vendas->vendas.idproduto == atual->produto.produto_numero && atual_vendas->vendas.data.mes == mes && atual_vendas->vendas.data.ano == ano) {
+                    quantidade_vendida += atual_vendas->vendas.quantidade_total;
+                }
+                atual_vendas = atual_vendas->proximo;
+            }
+
+            printf("Quantidade vendida no último mês: %d\n", quantidade_vendida);
+
+            fprintf(arquivo, "Nome do produto: %s\n", atual->produto.nome);
+            fprintf(arquivo, "Número do produto: %d\n", atual->produto.produto_numero);
+            fprintf(arquivo, "Quantidade em estoque: %d\n", atual->produto.quantidade);
+            fprintf(arquivo, "Quantidade vendida no último mês: %d\n", quantidade_vendida);
+            fprintf(arquivo, "\n");
+        }
+
+        atual = atual->proximo;
+    }
+
+    fclose(arquivo);
+}
+

@@ -20,6 +20,7 @@ int main()
     ler_categorias(categorias, &num_categorias);
     ler_produtos(&iniciolista, &fimlista, &num_produtos, categorias);
     ler_clientes(&iniciolistaclientes, &fimlistaclientes, &num_clientes);
+    ler_vendas(&iniciolista_vendas, &fimlista_vendas, &num_vendas);
     do
     {
         opcao = menu();
@@ -180,6 +181,7 @@ int main()
                                 printf("Produto nao encontrado\n");
                                 break;
                             }
+                            printf("%d",id_produto);
                             int quantidade;
                             int desconto;
                             int verificacao;
@@ -221,16 +223,38 @@ int main()
                                 case 3:
                                     listar_vendas_dia(iniciolista_vendas);
                                     break;
+                                case 4:
+                                    listar_produtos_mais_vendidos_hoje(iniciolista_vendas,iniciolista);
+                                    break;
+                                case 5:
+                                    listar_produtos_mais_vendidos_dia(iniciolista_vendas,iniciolista);
+                                    break;
+                                case 6:
+                                    listar_vendas_hoje_categoria(iniciolista_vendas,iniciolista,categorias,num_categorias);
+                                    break;
+                                case 7:
+                                    listar_vendas_dia_categoria(iniciolista_vendas,iniciolista,categorias,num_categorias);
+                                    break;
+                                case 8:
+                                    listar_produtos_mais_receita_hoje(iniciolista_vendas, iniciolista);
+                                    break;
+                                case 9:
+                                    listar_produtos_mais_receita_mes(iniciolista_vendas, iniciolista);
+                                    break;
+                                case 10:
+                                    listar_vendas_hoje_tipo(iniciolista_vendas, iniciolista);
+                                    break;
+                                case 11:
+                                    listar_vendas_mes_tipo(iniciolista_vendas, iniciolista);
+                                    break;
                                 default:
                                     break;
                                 }
                             }while(op3!=0);
                             break;
                         case 3:
-                            // remover_venda(&iniciolista_vendas,&fimlista_vendas,&num_vendas);
-                            break;
-                        case 4:
-                            // atualizar_venda(iniciolista_vendas,iniciolista,iniciolistaclientes);
+                            // relatorio de produtos
+                            gerar_relatorio_produtos_pouco_stock(iniciolista,iniciolista_vendas);
                             break;
                         default:
                             break;
@@ -246,6 +270,8 @@ int main()
             guardar_categorias(categorias, num_categorias);
             guardar_produtos(iniciolista);
             guardar_clientes(iniciolistaclientes);
+            guardar_vendas(iniciolista_vendas);
+
             break;
         default:
             break;
