@@ -187,3 +187,27 @@ int menulistarclientes(){
 
     return op;
 }
+int menulistarvendas(){
+    int op = 0;
+
+    do {
+        printf("\t-----------------------------------------------------------\n");
+        printf("\t1- Listar todas as vendas\n");
+        printf("\t2- Listar vendas de Hoje\n");
+        printf("\t3- Listar vendas de um determinado dia\n");
+        printf("\t4- Listar vendas de um determinado intervalo de tempo\n");
+        printf("\t5- Listar vendas de um determinado intervalo de tempo de um determinado cliente\n");
+        printf("\t6- Listar vendas de um determinado intervalo de tempo de um determinado produto\n");
+        printf("\t7- Listar vendas de um determinado intervalo de tempo de um determinado cliente e produto\n");
+        printf("\t0- Voltar\n");
+        printf("\t-----------------------------------------------------------\n");  
+        printf("Escolha uma Opcao: ");
+        scanf("%d", &op);
+
+        if (op < 0 || op > 7) {
+            printf("Opcao invalida. Tente novamente.\n");
+        }
+    } while (op < 0 || op > 7);
+
+    return op;
+}

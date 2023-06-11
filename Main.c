@@ -208,7 +208,23 @@ int main()
 
                             break;
                         case 2:
-                            listar_vendas(iniciolista_vendas);
+                            do{
+                                op3 = menulistarvendas();
+                                switch (op3)
+                                {
+                                case 1:
+                                    listar_vendas(iniciolista_vendas);
+                                    break;
+                                case 2:
+                                    listar_vendas_hoje(iniciolista_vendas);
+                                    break;
+                                case 3:
+                                    listar_vendas_dia(iniciolista_vendas);
+                                    break;
+                                default:
+                                    break;
+                                }
+                            }while(op3!=0);
                             break;
                         case 3:
                             // remover_venda(&iniciolista_vendas,&fimlista_vendas,&num_vendas);
